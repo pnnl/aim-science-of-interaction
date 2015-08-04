@@ -17,6 +17,7 @@ Developed at Pacific Northwest National Laboratory by:
 - Joon Yong Lee
 - Grant Nakamura
 - Paul Weidert
+- Grant Fujimoto
 - Alex Endert
 
 ## License
