@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html ng-app="discoveryCanvas">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Discovery|Canvas">
+    <meta name="author" content="shawn.hampton@pnnl.gov">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>science of interaction|streaming</title>
+
+    <!-- Library CSS -->
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap-datepicker.css">
+
+    <!-- App CSS -->
+    <link rel="stylesheet" type="text/css" href="css/layout-general.css">
+    <link rel="stylesheet" type="text/css" href="css/layout-app.css">
+    <link rel="stylesheet" type="text/css" href="css/theme.css">
+
+    <!-- JS Libs -->
+    <script type="text/javascript" src="lib/angular/angular.js"></script>
+    <script type="text/javascript" src="lib/jquery/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="lib/bootstrap/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="lib/d3/d3.v3.js"></script>
+    <script type="text/javascript" src="lib/custom/blast.js"></script>
+
+    <!-- Modules -->
+    <script src="js/DiscoveryCanvasApp.js"></script>
+    <script src="js/CanvasModule.js"></script>
+    <script src="js/SelectionModule.js"></script>
+    <script src="js/ConfigurationModule.js"></script>
+    <script src="js/DocumentViewerModule.js"></script>
+    <script src="js/SearchModule.js"></script>
+    <script src="js/HighlightModule.js"></script>
+    <script src="js/NonAngular.js"></script>
+</head>
+
+<body class="body" ng-controller="discoveryCtrl">
+    <div id="header" class="vertical-center" role="navigation">
+        <div id="title">Science of Interaction | Streaming</div>
+
+        <div id="mainMenu" class="vertical-center">
+            <div class="btn-group">
+                <div class="toolbar">
+                    <div class="btn-group">
+                        <button id="button-rename" title="Clear Selection" ng-click="clearSelection()" type="button" class="btn btn-default" data-toggle="tooltip">
+                            <span class="glyphicon glyphicon-remove"></span>&nbsp; Clear Selection
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button id="button-rename" title="Clear Highlight" ng-click="clearHighlight()" type="button" class="btn btn-default" data-toggle="tooltip">
+                            <span class="glyphicon glyphicon-remove"></span>&nbsp; Clear Highlight
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button id="button-rename" title="Rename Highlighted Group" ng-disabled="!isGroupHighlighted()"  data-toggle="modal" data-target="#cluster-label" class="btn btn-default" data-toggle="tooltip">
+                            <span class="glyphicon glyphicon-tag"></span>&nbsp; Rename Group
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button id="button-create" title="Create Group from Selected Document" ng-click="createGroup()" type="button" class="btn btn-default" data-toggle="tooltip">
+                            <span class="glyphicon glyphicon-plus"></span>&nbsp; Create Group
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button id="button-create" title="Bookmark Selected Document" ng-disabled="!isDocumentSelected()" ng-click="bookmarkSelectedDocument()" type="button" class="btn btn-default" data-toggle="tooltip">
+                            <span class="glyphicon glyphicon-bookmark"></span>&nbsp; Bookmark Document
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="vertical-divider"></div>
+        
+        <div id="overflowMenu" class="center">
+            <div class="dropdown">
+                <div class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                    <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+                </div>
+
+                <ul id="filesList" class="dropdown-menu multi-level dropdown-menu-right" role="menu">
+                    <li>
+                        <a class="btn btn-default" ng-click="nextIncrement()">
+                            <span class="glyphicon glyphicon-play" aria-hidden="true"></span>&nbsp; Next Increment
+                        </a>            
+                    </li>
+<!-- 
+                    <li>
+                        <a class="btn btn-default" ng-click="setListenToStream(true)">
+                            <span class="glyphicon glyphicon-play" aria-hidden="true"></span>&nbsp; Start Streaming
+                        </a>            
+                    </li>
+                    <li>
+                        <a class="btn btn-default" ng-click="setListenToStream(false)">
+                            <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>&nbsp; Stop Streaming
+                        </a>
+                    </li>
+ -->                    <li>
+                        <a class="btn btn-default" data-toggle="modal" data-target=".login-modal">
+                            <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp; Login to AIM
+                        </a>
+                    </li>
+                </ul>      
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div id="visualization" class="main">
+            <!-- VIS SECTION -->
+            <div ng-controller="canvasCtrl">
+                <canvas-visualization></canvas-visualization>
+            </div>
+        </div>
+
+        <div class="side">
+            <!-- SEARCH BAR -->
+            <div id="searchBar">            
+                <form class="searchForm" role="search" ng-submit="search()">
+                    <div class="form-group">
+                        <input id="search" type="text" class="form-control" placeholder="search..." ng-model="query">
+                    </div>
+                    <button type="submit" class="btn btn-default">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </form>
+                <div id="searchTags"></div>
+            </div>
+
+            <!-- DOCUMENT LIST -->
+            <div id="documentList">
+                <div id="documentListTitle">
+                    <div class="docTitle">{{documentListTitle}}</div>
+                    <div class="docCount">Document List ({{documentList.length}})</div>
+                </div>
+
+                <div id="documentListContainer">
+                    <div id="listScroll" class="scroll">
+                        <div class="listRow" ng-repeat="document in documentList" ng-click="selectDocumentFromList(document)">
+                            <div class="listIcon center">
+                                <svg width="12.75" height="17">
+                                    <g class="node document" ng-class="{selected: document.selected, 
+                                    'read-0': document.read == 0,
+                                    'read-1': document.read == 1,
+                                    'read-2': document.read == 2,
+                                    'read-3': document.read > 2}">
+                                        <rect width="12.75" height="17"></rect>
+                                        <rect ng-class="{bookmarked: document.bookmarked}" class="bookmarkRect" width="4" height="17"></rect>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div class="listTitle">{{document.title}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DOCUMENT VIEWER -->
+            <div id="documentViewer" ng-controller="documentViewerController">
+                <div id="documentViewerActions">
+                    <div class="toolbar">
+                    </div>
+                </div>
+
+                <div id="documentViewerTitle">
+                    <div class="docTitle">{{selectedDocumentTitle}}</div>
+                </div>
+
+                <div id="documentViewerContainer">
+                    <div id="docScroll" class="scroll">
+                        <div id="text-viewer" ng-bind-html="documentText"></div>
+
+                    </div>
+                </div>
+
+                <!-- ANNOTATION -->              
+                <div id='annotation' style='display:none; position:fixed; z-index:1035'></div>
+            </div>
+        </div>   
+    </div> 
+
+    <!-- CLUSTER LABEL MODAL -->
+    <div class="modal fade" id="cluster-label" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="padding-top: 60px;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Edit Cluster Label</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="labelCluster" name="labelCluster" class="contact" name="contact" ng-submit="renameHighlightedGroup()">
+                        <label for="clusterLabel">Label</label><br>
+                        <input id="clusterLabelText" type="text" name="clusterLabel" class="form-control input-xlarge" ng-model="label" onfocus="this.select();" onmouseup="return false;"><br>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="submitLabel" type="button" class="btn btn-default" data-dismiss="modal">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN MODAL -->
+    <div class="modal fade login-modal" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">AIM Login</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form" role="form" name="login" ng-submit="loginAIM()">
+                        <label for="username">Username: </label><br>
+                        <input id="login-username" type="text" name="usernameText" class="form-control input-xlarge login-username" placeholder="Enter Username" ng-model="usernameText" autofocus><br>
+                        <!-- <label for="password">Password: </label><br>
+                        <input type="password" name="passwordText" class="form-control input-xlarge login-password" placeholder="Enter Password" ng-model="passwordText"><br> -->
+                        <button type="button" class="btn btn-primary login-button">Login</button>
+                    </form>
+                </div>      
+            </div>
+        </div>
+    </div>
+</body>
+</html>

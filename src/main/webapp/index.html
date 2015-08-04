@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html ng-app="discoveryCanvas">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Discovery|Canvas">
+    <meta name="author" content="shawn.hampton@pnnl.gov">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>discovery|canvas</title>
+    <!--link rel="stylesheet" href="css/bootstrap/bootstrap.min.css"-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="css/dashboard.css">
+    
+    <script src="js/angular/angular.min.js"></script>
+    <script type="text/javascript" src="js/jquery/jquery-1.11.1.js"></script> 
+    <!-- script type="text/javascript" src="js/bootstrap/bootstrap.min.js"></script-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/d3/d3.v3.js"></script>
+    <script type="text/javascript" src="js/custom/spin.min.js"></script>
+    <script type="text/javascript" src="js/custom/text-wrap.js"></script>
+    <script src="js/DiscoveryCanvasApp.js"></script>
+    <script src="js/CanvasModule.js"></script>
+    <script src="js/SelectionModule.js"></script>
+    <script src="js/ConfigurationModule.js"></script>
+    <script src="js/DocumentViewerModule.js"></script>
+    <script src="js/NonAngular.js"></script>
+</head>
+
+<body ng-controller="discoveryCtrl">
+    <nav id="header" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Science of Interaction | Streaming</a>
+            </div>
+            <div class="btn-group navbar-right" style="margin-top: 8px">
+                <a class="btn btn-default" ng-click="setListenToStream(true)">
+                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                </a>
+                <a class="btn btn-default" ng-click="setListenToStream(false)">
+                    <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
+                </a>
+            </div>
+            <div class="btn-group navbar-right" style="margin-top: 8px">
+                <a class="btn btn-default" data-toggle="modal" data-target=".login-modal">
+                    <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
+                </a>
+            </div>
+            <form class="navbar-form navbar-right" role="search" ng-submit="search()">
+                <div class="form-group">
+                    <input id="search" type="text" class="form-control" placeholder="search..." ng-model="query">
+                </div>
+                <button type="submit" class="btn btn-default">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </button>
+            </form>
+        </div>
+    </nav>
+    
+    <div class="modal fade login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  		<div class="modal-dialog modal-sm">
+    		<div class="modal-content">
+    			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        			<h4 class="modal-title" id="myModalLabel">ASI Login</h4>
+      			</div>
+				<div class="modal-body">
+        			<form class="form" role="form" name="login" ng-submit="loginASI()">
+			        	<label for="username">Username: </label><br>
+			        	<input type="text" name="usernameText" class="form-control input-xlarge login-username" placeholder="Enter Username" ng-model="usernameText"><br>
+			        	<label for="password">Password: </label><br>
+			        	<input type="password" name="passwordText" class="form-control input-xlarge login-password" placeholder="Enter Password" ng-model="passwordText"><br>
+			        	<button type="button" class="btn btn-primary login-button">Login</button>
+			    	</form>
+      			</div>		
+    		</div>
+  		</div>
+	</div>
+
+    <div class="container-fluid">
+        <div class="row">
+        <div class="row-same-height row-full-height">
+            <div id="visualization" class="col-xs-9 col-xs-height col-full-height main">
+                <!-- VIS SECTION -->
+                <div ng-controller="canvasCtrl">
+                    <canvas-visualization></canvas-visualization>
+                </div>
+
+            </div>
+
+            <div id="right" class="col-xs-3 col-xs-height col-full-height sidebar">
+                <!-- Document viewer -->
+                <div class="documentViewer viewtext" ng-controller="documentViewerCtrl" ng-class="{viewcluster: isCluster(), viewtext: isText()}">
+                    <!-- Panel for showing clusters -->
+                    <div id="doccluster">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <nav id="clusterHeader" class="navbar navbar navbar-fixed-top" role="navigation" style="position: absolute;">
+                                    <div class="container-fluid">
+                                        <div class="navbar-header">
+                                            <span class="navbar-brand">{{docListTitle}}</span>
+                                        </div>
+                                        <ul class="nav navbar-right navbar-nav">
+                                            <li>
+                                                <a data-toggle="modal" href="#cluster-label">
+                                                    <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a ng-click"removeCluster()">
+                                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+
+                        <div class="container-fluid" style="padding-top: 55px;">
+                            <div class="row">
+                                <div id = "docList" ng-bind-html="documentList"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Panel for showing documents -->
+                    <div id="doctext">
+                        <div class="container-fluid" style="position: relative;">
+                            <div class="row">
+                            <nav id="clusterHeader" class="navbar-fixed-top navbar-default" role="navigation" style="position: absolute;">
+                                    <div class="container-fluid">
+                                        <div class="navbar-header">
+                                            <span class="navbar-brand">{{documentName}}</span>
+                                        </div>
+                                        <ul class="nav navbar-right navbar-nav">
+                                        	<li>
+                                                <a ng-click="createNewClusterWithDocId()">
+                                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a ng-click="removeFromCluster()">
+                                                    <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a ng-click"">
+                                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+
+                        <div class="container-fluid" style="padding-top: 55px;">
+                            <div class="row">
+                            	<div id="text-viewer-wrapper">
+                            	<!--<div id="text-screen">
+                            		<button id="read-button" ng-click="reading()">Read</button>
+                            	</div>-->
+                                <div id = "text-viewer" ng-bind-html="documentText" style="overflow-y: auto;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <!-- Panel for showing new documents -->
+                    <div id="newdoc"  class="row" style="position:relative">
+                    </div>
+
+                    <!-- Modal for inputting label -->
+                    <div class="modal fade" id="cluster-label" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="padding-top: 60px;">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Edit Cluster Label</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="contact" name="contact">
+                                <label for="clusterLabel">Label</label><br>
+                                <input type="text" name="clusterLabel" class="form-control input-xlarge" ng-model="label"><br>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="labelCluster()">Submit</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="doc-annotation" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="padding-top: 60px;">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+			                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			                <h4 class="modal-title" id="myModalLabel">Save your annotation</h4>
+			            </div>
+			            <div class="modal-body">
+			            	<form class="selected-text" name="text">
+			                    <label for="clusterLabel">Selected text</label><br>
+			                    <input type="text" name="selectedText" class="form-control input-xlarge" ng-model="selectedText"><br>
+			                </form>
+			                <form class="annotation-note" name="note">
+			                    <label for="clusterLabel">Annotation</label><br>
+			                    <input type="text" name="annotation" class="form-control input-xlarge" ng-model="annotation"><br>
+			                </form>
+			            </div>
+			            <div class="modal-footer">
+			                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="setAnnotation()">Submit</button>
+			                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+        </div>                  
+    </div>
+</div>
+</div>
+<div id='annotation' style='display:none; position:fixed; z-index:1035'></div>
+
+<!-- nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header" -->
+            <!-- STATUS SECTION -->
+        <!-- /div>
+    </div>
+</nav -->
+</body>
+</html>

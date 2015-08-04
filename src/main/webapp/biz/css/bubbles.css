@@ -1,0 +1,46 @@
+
+.bubbles rect {
+	fill: white;
+}
+	
+.bubbles circle {
+    fill: lightgray;
+    stroke: black;
+}
+
+.bubbles text {
+    text-anchor: middle;
+    alignment-baseline: middle;
+}
+
+.bubbles text {
+    font-size: 14pt;
+}
+
+.bubbles circle {
+    stroke-width: 3px;
+}
+
+[lob="clothing"] circle {
+	fill: #1f77b4; 
+}
+
+[lob="automotive"] circle {
+	fill: #ff7f0e; 
+}
+
+[lob="appliances"] circle {
+	fill: #2ca02c; 
+}
+
+[lob="superstores"] circle {
+	fill: #d62728; 
+}
+
+[lob="departmentstores"] circle {
+	fill: #9467bd;
+}
+
+[lob="athleticstores"] circle {
+	fill: #8c564b;
+}

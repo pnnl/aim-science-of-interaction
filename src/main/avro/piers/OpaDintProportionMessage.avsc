@@ -1,0 +1,17 @@
+{
+  "namespace": "gov.pnnl.aim.af.avro",
+  "type" : "record",
+  "name" : "ProportionsMessage",
+  "fields" : [
+        {"name" : "company", "type" : "string"},
+        {"name" : "startdate", "type" : "string"},
+        {"name" : "enddate", "type" : "string"},
+        {"name" : "proportions", "type" :
+            {
+                "type" : "array",
+                "name" : "value",
+                "items" : "double"
+            }
+        }
+  ]
+}

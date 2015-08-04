@@ -1,0 +1,37 @@
+{
+  "namespace": "gov.pnnl.aim.discovery.streams.avro",
+  "type" : "record",
+  "name" : "CompoundsMessage",
+  "fields" : [
+	    {"name" : "spectrum", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "double"
+			}
+		},
+	    {"name" : "fits", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : {
+					"type" : "record",
+					"name" : "FitMessage",
+					"fields" : [
+						    {"name" : "compound", "type" : "string"},
+						    {"name" : "opaRank", "type" : "string"},
+						    {"name" : "shyreRank", "type" : "string"},
+						    {"name" : "fit", "type":
+								{
+									"type"  : "array",
+								    "name"  : "value",
+									"items" : "double"
+								}
+							}
+					]
+		    	}
+			}
+	    	
+		}
+	  ]
+}

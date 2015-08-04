@@ -1,0 +1,287 @@
+#banner {
+  height: 20px;
+}
+
+/* Fixed Height Header */
+#header {
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: left;
+  padding: 10px;
+}
+
+#title {
+  flex: 1 1;
+}
+
+#mainMenu {
+  flex: 5;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+#visualization {
+	display: flex;
+	flex-direction: column;
+}
+
+#compoundLabels {
+	flex: 0 0 150px;
+	height: 150px;
+}
+
+#currentSample {
+	height: 140px;
+	display: flex;
+	flex-direction: row;
+}
+
+#currentLeft {
+	flex: 0 0 178px;
+	display: flex;
+	flex-direction: column;
+}
+
+#currentRight {
+	flex: 1 1;
+}
+
+#currentLabel {
+
+}
+
+#currentView {
+	padding-left: 18px;
+}
+
+#currentSpectra {
+	display: flex;
+	flex-direction: row;
+	padding-top: 15px;
+}
+
+#sampleHistory {
+	flex: 1 0;
+	padding: 10px;
+	position:relative; /*Needed for popup positioning*/
+}
+
+#legend {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	top: 60px;
+	right: 20px;
+	width: 140px;
+	height: 120px;
+    border: 1px solid black;
+    background-color: lightgray;
+}
+
+.middle {
+	display: flex;
+	justify-content: center;
+}
+
+#legend {
+	font-weight: bold;
+	font-size: 14px;
+	text-transform: uppercase;
+}
+
+#legend > div:nth-child(odd) {
+	flex: 0 0 20px;
+}
+
+#legend > div:nth-child(even) {
+	flex: 0 0 40px;
+}
+
+.legCont {
+	display: flex;
+	flex-direction: row;
+	height: 32px;
+}
+
+.cont {
+	flex: 0 0 32px;
+	height: 32px;
+}
+
+
+.sample:nth-child(odd) {
+	background-color: lightgray;
+}
+
+#graph {
+	flex: 0 0 200px;
+	display: flex;
+	flex-direction: row;
+	position:relative;  /*Needed for popup positioning*/
+}
+
+#compundGraph {
+	flex: 0 0 200px;
+	display: flex;
+	flex-direction: row;
+}
+
+.spacer {
+	flex: 0 0 200px;
+}
+
+.sampleTimestamp {
+	flex: 0 0 60px;
+}
+
+.sampleLabel {
+	flex: 0 0 98px;
+}
+
+.sampleError {
+	flex: 0 0 30px;
+}
+
+.sampleNoError {
+	flex: 0 0 30px;
+}
+
+.sampleChart {
+	flex: 0 0 918px;
+}
+
+.sampleBoxes svg {
+	padding-top: 2px;
+}
+
+.sampleView {
+	flex: 0 0 30px;
+	padding-right: 8px;
+}
+
+.sampleSpectra {
+	flex: 0 0 100px;
+}
+
+.sample {
+	display: flex;
+	flex-direction: row;
+}
+
+
+.body { 
+	position: absolute;
+}
+
+
+.area {
+	fill: lightsteelblue;
+	stroke-width: 0;
+}
+
+.specTitle{
+	margin-left: 20px;
+	margin-bottom: 20px;
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.navButton{
+	background: black;
+	border: none;
+	margin:0;
+	padding:0;
+}
+
+.popup, .errPopup{
+	position: absolute;
+	width: 90px;
+	/**height: 60px;**/
+	background: #F9F9F9;
+	display: none;
+	box-shadow: 3px 3px 10px black;	
+}
+
+.popup button span, .errPopup button span {
+	padding-top: 2px;
+	padding-left: 1px;
+}
+
+.popupInfo, .editInfo, .errPopupInfo, .errEditInfo{
+	position: relative;
+	float: left;
+	width: 100%;
+	height: 100%;
+	font-size: 12px;
+	padding: 4px;
+	font-weight: 700;
+	background: #F9F9F9;
+	cursor: default;
+}
+
+.editInfo, .errEditInfo{
+	padding: 10px;
+	display:none;
+}
+
+.pointer, .errPointer{
+	position:absolute;
+	left: -10px;
+	top: 20px;
+	width: 20px;
+	height: 20px;
+	background: #F9F9F9;
+	-ms-transform: rotate(45deg); /* IE 9 */
+    -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+    transform: rotate(45deg);
+    box-shadow: 3px 3px 10px black;
+}
+
+#edit, #popupClose, #errEdit, #errPopupClose{
+	position: absolute;
+	z-index: 10;
+	right: -7px;
+	width: 22px;
+	height: 22px;
+	background: #F9F9F9;
+	border: none;
+	border-radius: 10px;
+	padding: 0;	
+}
+
+#edit, #errEdit{
+	bottom: -7px;
+	box-shadow: 5px 5px 10px -2px black;
+}
+
+#popupClose, #errPopupClose{
+	top: -7px;
+	box-shadow: 5px 0px 7px -2px black;
+}
+
+#editYes, #editNo, #errEditYes, #errEditNo{
+	position:realtive;
+	float: left;
+	margin: 10px;
+	margin-left: 25px;
+	margin-right: 25px;
+	width: 50px;
+}
+
+#editYes, #errEditYes{
+	background: rgba(0,255,0,.1);
+}
+
+#editNo, #errEditNo{
+	background: rgba(255,0,0,.1);
+}
+
+#currentView, .sampleView{
+	color:rgba(0,0,0,.35);
+}
+
+.vetoGroup{
+	pointer-events: none;
+}

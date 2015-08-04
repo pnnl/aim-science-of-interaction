@@ -1,0 +1,18 @@
+{
+  "namespace": "gov.pnnl.aim.discovery.streams.avro",
+  "type" : "record",
+  "name" : "DintStreamRecord",
+  "fields" : [
+	    {"name" : "version", "type" : "int"},
+	    {"name" : "timestamp", "type" : "long"},
+	    {"name" : "fileName", "type" : "string"},
+	    {"name" : "rowNumber", "type" : "int"},
+    	{"name" : "values", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "string"
+			}
+		}
+	  ]
+}

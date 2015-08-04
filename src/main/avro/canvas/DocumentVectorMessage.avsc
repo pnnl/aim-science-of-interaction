@@ -1,0 +1,17 @@
+{
+  "namespace": "gov.pnnl.aim.discovery.streams.avro",
+  "type" : "record",
+  "name" : "DocumentVectorMessage",
+  "fields" : [
+	    {"name" : "dataset", "type" : "string"},
+	    {"name" : "file", "type" : "string"},
+	    {"name" : "content", "type" : "string"},
+	    {"name" : "vector", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "double"
+			}
+		}
+	  ]
+}

@@ -1,0 +1,17 @@
+{
+  "namespace": "gov.pnnl.aim.nmr.avro",
+  "type" : "record",
+  "name" : "NMRSampleFeedbackMessage",
+  "fields" : [
+	    {"name" : "sampleID", "type" : "string"},
+	    {"name" : "compoundName", "type" : "string"},
+	    {"name" : "presence", "type" : "boolean"},
+	    {"name" : "spectrum", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "double"
+			}
+		}
+	  ]
+}

@@ -1,0 +1,10 @@
+{
+  "namespace": "gov.pnnl.aim.discovery.streams.avro",
+  "type" : "record",
+  "name" : "DocumentMessage",
+  "fields" : [
+	    {"name" : "dataset", "type" : "string"},
+	    {"name" : "file", "type" : "string"},
+	    {"name" : "content", "type" : "string"}
+	  ]
+}

@@ -1,0 +1,12 @@
+{
+  "namespace": "gov.pnnl.aim.shyre.stream.avro",
+  "type" : "record",
+  "name" : "ShyreNmrMessage",
+  "fields" : [
+	    {"name" : "compound", "type" : "string"},
+	    {"name" : "spectra", "type" : "string"},
+	    {"name" : "present", "type" : "boolean"},
+        {"name" : "count", "type" : "int"},
+        {"name" : "total", "type" : "int"}
+	    ]
+}

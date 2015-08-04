@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html ng-app="discoveryCanvas">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Science of Interaction | Spectra">
+	<meta name="author" content="shawn.hampton@pnnl.gov">
+	<link rel="icon" href="../../favicon.ico">
+
+	<title>Science of Interaction | Spectra</title>
+	<link rel="stylesheet" type="text/css" href="css/reset.css"/>
+	<link rel="stylesheet" type="text/css" href="css/dashboard.css">
+	<link rel="stylesheet" type="text/css" href="lib/rickshaw/rickshaw.css">
+	<link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="lib/jquery-ui-1.11.2/jquery-ui.css">
+	<link rel="stylesheet" href="lib/jquery-ui-1.11.2/jquery-ui.theme.css">
+	
+	<style>
+	.center {
+		text-align: center;
+	}
+	.middle {
+		vertical-align: bottom;
+	}
+	</style>
+	
+	<script type="text/javascript" src="lib/jquery/jquery-1.11.1.js"></script> 
+	<script type="text/javascript" src="lib/jquery-ui-1.11.2/jquery-ui.js"></script> 
+	<script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="lib/d3/d3.v3.js"></script>
+	<script type="text/javascript" src="lib/rickshaw/rickshaw.js"></script>
+	
+	<script>
+
+	var c1 = 'rgba(202,6,6,0.5)';
+	var s1 = 'rgba(0,0,0,0.15)';
+	var c2 = 'rgba(202,126,147,0.5)';
+	var s2 = 'rgba(0,0,0,0.15)';
+	var c3 = 'rgba(6,202,6,0.5)';
+	var s3 = 'rgba(0,0,0,0.15)';
+	
+	// Ask for sample type hints
+	// Submit
+	// Wait for candidate compounds
+	// Submit confident compound
+	// Wait for final results
+	// Present final results
+	
+	var t;
+	
+	function onReady() {
+		$( "#hint-continue" ).click(function() {
+		  sendHints();
+		});
+		prepAutocomplete1();
+	}
+	
+	function sendHints() {
+		$("#view-hints").hide();
+		$("#view-wait-ask").show();
+		t = setInterval(getSpectra, 1000);
+	}
+	
+	function getSpectra() {
+
+		$.getJSON("/discoveryStreaming/newspectra", function(data) {
+			if (data && data.length == 1) {
+				clearInterval(t);
+				present(data);	
+			}
+		});
+	}
+
+	function submitCompound(compoundName) {
+
+		$("#view-spectra").hide();
+		$("#view-wait-result").show();
+		
+		console.log("sending : " + compoundName);
+		$.getJSON("/discoveryStreaming/confidentcompound?c=" + encodeURIComponent(compoundName), function(data) {
+			if (data && data.length == 1) {
+				console.log("confident compound sent");
+			}
+		});
+		
+		setTimeout(function() {
+			$("#view-wait-result").hide();
+			$("#view-result").show();			
+		}, 2000);
+	}
+	
+	function present(data) {
+
+		$("#view-hints").hide();
+		$("#view-wait-ask").hide();
+		$("#view-spectra").show();
+				
+		$("#view-spectra").empty();		
+		$("#view-spectra").append(
+				 '<div style="text-align: center;">' +
+				 '<h1>Which predicted compound are you most confident is present in this sample?</h1>' +
+				 '</div>' +
+				 '<p><br/></p>' +
+				 '<table class="table" id="fits">' +
+				 '</table>');
+		
+		var el = $("#fits");
+		el.append(
+				 '<tr>' +
+				 '<th>Present?</th>' +
+				 '<th>Compound</th>' +
+				 '<th>OPA Rank</th>' +
+				 '<th>Shyre Rank</th>' +
+				 '<th>Full Spectrum with Compound Autofit</th>' +
+				 '</tr>');
+
+		data[0]
+		var spectrum = [];
+		for (i = 0; i < data[0].spectrum.length; i++) {
+			spectrum.push({
+				x: (i + 1),
+				y: data[0].spectrum[i]
+			});
+		}
+		
+		for (i = 0; i < data[0].fits.length; i++) {			
+
+			el.append('<tr>' +
+					  '<td style="vertical-align: middle;"><button type="button" value="' + data[0].fits[i].compound + '" onclick="submitCompound(\'' + data[0].fits[i].compound + '\')">' + data[0].fits[i].compound + ' is Present</button></td>' +
+					  '<td style="vertical-align: middle;">' + data[0].fits[i].compound + '</td>' +
+					  '<td style="vertical-align: middle;" class="center">' + data[0].fits[i].opaRank + '</td>' +
+					  '<td style="vertical-align: middle;" class="center">' + data[0].fits[i].shyreRank + '</td>' +
+					  '<td><div id="chart' + i + '"></div></td>' +
+					  '</tr>');
+			
+			var fit = [];
+			
+			for (j = 0; j < data[0].fits[i].fit.length; j++) {
+				fit.push({
+					x: (j + 1),
+					y: data[0].fits[i].fit[j]
+				});
+			}
+
+			var graph = new Rickshaw.Graph( {
+				element: document.querySelector("#chart" + i),
+				width: 1024,
+				height: 100,
+				renderer: 'area',
+				stroke: true,
+				series: [ {
+					data: fit,
+					color: c1,
+					stroke: s1
+				}, {
+					data: spectrum,
+					color: c2,
+					stroke: s2
+				} ]
+			} );
+			//graph.renderer.unstack = false;
+			graph.render();
+			
+
+			if (i == 0) {
+				var graph2 = new Rickshaw.Graph( {
+					element: document.querySelector("#finalfit"),
+					width: 1024,
+					height: 100,
+					renderer: 'area',
+					stroke: true,
+					series: [ {
+						data: fit,
+						color: c3,
+						stroke: s3
+					} ]
+				} );
+				graph2.render();
+			}
+		}		
+
+	}
+	
+	var sampleTypes = [];
+	var compoundNames = [];
+	
+	function prepAutocomplete1() {
+
+		$.getJSON("/discoveryStreaming/sampletypes", function(data) {
+			sampleTypes = data;
+			prepAutocomplete2();
+		});
+	}
+
+	function prepAutocomplete2() {
+
+		$.getJSON("/discoveryStreaming/compoundnames", function(data) {
+			compoundNames = data;
+			prepAutocomplete3();
+		});
+	}
+	
+	function prepAutocomplete3() {
+		
+		$("#sampleType").autocomplete({
+		      source: sampleTypes
+		    });
+		
+		$("#compoundNames").autocomplete({
+		      source: compoundNames
+		    });
+	}
+	
+	</script>
+
+</head>
+
+<body onload="onReady();">
+	<nav id="header" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Science of Interaction | Spectra</a>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container-fluid" id="container">
+
+		<p><br/></p>
+		
+		<div id="view-hints">
+			<div class="jumbotron" style="margin-left: auto; margin-right: auto; width: 75%;">
+			  <h1>Tell me about your sample ...</h1>
+			  <p>These initial hints will help our algorithm better determine the compounds and concentrations present in the sample. 
+			  These are optional.</p>
+			  <p><br/></p>
+			  <p>This sample is <input id="sampleType"> (example: Urine, Blood)</p>
+			  <p>This sample likely contains the compound <input id="compoundNames"> (example: Creatine, Indoxyl)</p>
+			  <p><br/></p>
+			  <p><button type="button" name="continue" id="hint-continue">Continue</button></p>
+			</div>
+		</div>
+		
+		
+		<div id="view-wait-ask" style="display: none;">
+			<div class="jumbotron" style="margin-left: auto; margin-right: auto; width: 75%;">
+			  <h1>Waiting for Spectra ...</h1>
+			  <p>The sample must first be scanned by the NMR instrument then our algorithm will figure out a few
+			  likely compounds to ask you about.</p>
+			  <p><br/></p>
+			  <p>The AIM Box will ask you questions about your spectra soon.</p>
+			</div>
+		</div>
+		
+		<div id="view-spectra" style="display: none;">	
+		</div>
+		
+		<div id="view-wait-result" style="display: none;">
+			<div class="jumbotron" style="margin-left: auto; margin-right: auto; width: 75%;">
+			  <h1>Waiting for final spectrum profile ...</h1>
+			  <p>The AIM Box is fitting your spectrum with the final full profile based on your feedback.</p>
+			  <p><br/></p>
+			  <p>When it is done, you can see your final result and export it to Chenomx Profiler or Microsoft Excel.</p>
+			</div>
+		</div>
+		
+		<div id="view-result" style="display: none;">
+
+			 <div style="text-align: center;">
+			 <h1>Profiled Spectrum</h1>
+			 </div>
+			 
+			 <p><br/></p>
+			 <div style="margin-left: auto; margin-right: auto; width: 1024px;" id="finalfit"></div>
+			 <p><br/></p>
+			 
+			 <div style="margin-left: auto; margin-right: auto; width: 470px;">
+			 <img src="images/icon-chenomx.png">&nbsp;&nbsp;<button>Download to Chenomx</button>
+			 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			 <img src="images/icon-excel.png">&nbsp;&nbsp;<button>Download to Excel</button>
+			 </div>
+			 <p><br/></p>
+			 
+			 <table class="table" id="finalresult" style="margin-left: auto; margin-right: auto; width: 800px;">
+			   <tr>
+				 <th>Compound</th>
+				 <th>Concentration</th>
+				 <th>Notes</th>
+			   </tr>
+			   <tr>
+				  <td style="vertical-align: middle;">Creatine</td>
+				  <td style="vertical-align: middle;">.211</td>
+				  <td style="vertical-align: middle;">NOUS: This often occurs with Citrate</td>
+			   </tr>	
+			   <tr>
+				  <td style="vertical-align: middle;">Glycolic acid</td>
+				  <td style="vertical-align: middle;">.113</td>
+				  <td style="vertical-align: middle;"></td>
+			   </tr>	
+			   <tr>
+				  <td style="vertical-align: middle;">Indoxyl</td>
+				  <td style="vertical-align: middle;">.085</td>
+				  <td style="vertical-align: middle;">NOUS: This rarely occurs in a urine sample</td>
+			   </tr>	
+			   <tr>
+				  <td style="vertical-align: middle;">Citrate</td>
+				  <td style="vertical-align: middle;">.0582</td>
+				  <td style="vertical-align: middle;"></td>
+			   </tr>					  
+			 </table>
+
+		</div>
+		
+	</div>
+
+</body>
+</html>

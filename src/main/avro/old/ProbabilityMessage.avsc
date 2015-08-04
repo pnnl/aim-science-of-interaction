@@ -1,0 +1,17 @@
+{
+  "namespace": "gov.pnnl.aim.avro.dint",
+  "type" : "record",
+  "name" : "ProbabilityMessage",
+  "fields" : [
+	    {"name" : "company", "type" : "string"},
+	    {"name" : "startdate", "type" : "long"},
+	    {"name" : "enddate", "type" : "long"},
+	    {"name" : "probabilities", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "double"
+			}
+		}
+	  ]
+}

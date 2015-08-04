@@ -1,0 +1,392 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="../../favicon.ico">
+
+<title>AIM Science of Interaction | Lines of Business</title>
+
+<!-- Bootstrap core CSS -->
+<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="js/rickshaw/rickshaw.css">
+
+<style>
+.chart_container {
+        position: relative;
+        font-family: Arial, Helvetica, sans-serif;
+}
+.chart {
+        position: relative;
+        left: 10px;
+}
+.y_axis {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 10px;
+}
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#contentwrapper{
+float: right;
+width: 100%;
+margin-left: -700px; /*Set left margin to -(leftColumnWidth + RightColumnWidth)*/
+}
+
+#contentcolumn{
+margin-left: 700px; /*Set left margin to (leftColumnWidth + RightColumnWidth)*/
+}
+
+#leftcolumn{
+float: left;
+width: 350px; /*Width of left column in pixels*/
+}
+
+#rightcolumn{
+float: left;
+width: 350px; /*Width of right column in pixels*/
+}
+</style>
+
+<script type="text/javascript" src="js/d3/d3.js"></script>
+<script type="text/javascript" src="js/d3/d3plus.js"></script>
+<script type="text/javascript" src="js/rickshaw/rickshaw.js"></script>
+<script type="text/javascript" src="js/jquery/jquery-1.11.1.js"></script>
+<script type="text/javascript" src="js/jquery/jquery.dataTables.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.11.2/jquery-ui.js"></script>
+	
+<script>
+
+var c1 = 'rgba(202,6,6,0.5)';
+var s1 = 'rgba(0,0,0,0.15)';
+
+function onReady() {
+	
+	var palette = new Rickshaw.Color.Palette();
+	
+	var v = [{x:1,y:1},{x:2,y:4},{x:3,y:2},{x:4,y:2},{x:5,y:4},{x:6,y:5},{x:7,y:5},{x:8,y:3},{x:9,y:1},{x:10,y:4},{x:11,y:2},{x:12,y:5},{x:13,y:1},{x:14,y:3},{x:15,y:4},{x:16,y:1},{x:17,y:1},{x:18,y:3},{x:19,y:2},{x:20,y:3},{x:21,y:1},{x:22,y:5},{x:23,y:2},{x:24,y:3},{x:25,y:3},{x:26,y:5},{x:27,y:1},{x:28,y:4},{x:29,y:5},{x:30,y:5},{x:31,y:3},{x:32,y:1},{x:33,y:5},{x:34,y:5},{x:35,y:4},{x:36,y:3},{x:37,y:2},{x:38,y:3},{x:39,y:2},{x:40,y:4},{x:41,y:5},{x:42,y:4},{x:43,y:4},{x:44,y:3},{x:45,y:55},{x:46,y:61},{x:47,y:51},{x:48,y:70},{x:49,y:88},{x:50,y:94}];
+	var v2 = [{x:1,y:91},{x:2,y:85},{x:3,y:72},{x:4,y:91},{x:5,y:89},{x:6,y:84},{x:7,y:79},{x:8,y:91},{x:9,y:79},{x:10,y:95},{x:11,y:76},{x:12,y:87},{x:13,y:76},{x:14,y:84},{x:15,y:77},{x:16,y:77},{x:17,y:81},{x:18,y:81},{x:19,y:73},{x:20,y:92},{x:21,y:73},{x:22,y:71},{x:23,y:72},{x:24,y:86},{x:25,y:90},{x:26,y:72},{x:27,y:79},{x:28,y:77},{x:29,y:82},{x:30,y:94},{x:31,y:78},{x:32,y:80},{x:33,y:86},{x:34,y:86},{x:35,y:73},{x:36,y:79},{x:37,y:90},{x:38,y:74},{x:39,y:80},{x:40,y:78},{x:41,y:77},{x:42,y:77},{x:43,y:70},{x:44,y:81},{x:45,y:42},{x:46,y:11},{x:47,y:4},{x:48,y:10},{x:49,y:6},{x:50,y:10}];
+	var v3 = [{x:1,y:91},{x:2,y:85},{x:3,y:72},{x:4,y:91},{x:5,y:89},{x:6,y:84},{x:7,y:79},{x:8,y:91},{x:9,y:79},{x:10,y:95},{x:11,y:76},{x:12,y:87},{x:13,y:76},{x:14,y:84},{x:15,y:77},{x:16,y:77},{x:17,y:81},{x:18,y:81},{x:19,y:73},{x:20,y:92},{x:21,y:73},{x:22,y:71},{x:23,y:72},{x:24,y:86},{x:25,y:90},{x:26,y:72},{x:27,y:79},{x:28,y:77},{x:29,y:82},{x:30,y:94},{x:31,y:78},{x:32,y:80},{x:33,y:86},{x:34,y:86},{x:35,y:73},{x:36,y:79},{x:37,y:90},{x:38,y:74},{x:39,y:80},{x:40,y:78},{x:41,y:77},{x:42,y:77},{x:43,y:70},{x:44,y:81},{x:45,y:42},{x:46,y:41},{x:47,y:44},{x:48,y:40},{x:49,y:46},{x:50,y:40}];
+	
+	var graph = new Rickshaw.Graph({
+        element: document.querySelector("#chart1"),
+        renderer: 'line',
+        width: 300,
+    	height: 75,
+        series: [{
+            data: v,
+            color: palette.color()
+    	}, {
+		    data: v2,
+		    color: palette.color()
+		}]
+	});
+	
+	var y_ticks = new Rickshaw.Graph.Axis.Y( {
+		graph: graph,
+		orientation: 'left',
+		tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+		element: document.getElementById('y_axis1')
+	} );
+	 
+	graph.render();
+	
+	/*
+	for (var i = 2; i < 6; i++) {
+		
+		var graph2 = new Rickshaw.Graph({
+	        element: document.querySelector("#chart" + i),
+	        renderer: 'line',
+	        width: 300,
+	    	height: 75,
+	        series: [{
+	                data: v3,
+	                color: palette.color()
+	        }]
+		});
+		
+		var y_ticks2 = new Rickshaw.Graph.Axis.Y( {
+			graph: graph2,
+			orientation: 'left',
+			tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+			element: document.getElementById('y_axis' + i)
+		} );
+		 
+		graph2.render();
+	}
+	*/
+	
+	// Do box plots	
+	var data = [
+	  {"keyword": "pants", "name":"portion1", "value": 15},
+	  {"keyword": "pants", "name":"portion2", "value": 24},
+	  {"keyword": "pants", "name":"portion3", "value": 27},
+	  {"keyword": "pants", "name":"portion4", "value": 35},
+	  {"keyword": "pants", "name":"portion5", "value": 35},
+	  {"keyword": "pants", "name":"portion6", "value": 39},
+	  {"keyword": "pants", "name":"portion7", "value": 47},
+	  {"keyword": "pants", "name":"portion8", "value": 55},
+	  {"keyword": "blouse", "name":"portion1", "value": 5},
+	  {"keyword": "blouse", "name":"portion2", "value": 10},
+	  {"keyword": "blouse", "name":"portion3", "value": 30},
+	  {"keyword": "blouse", "name":"portion4", "value": 38},
+	  {"keyword": "blouse", "name":"portion5", "value": 45},
+	  {"keyword": "blouse", "name":"portion6", "value": 49},
+	  {"keyword": "blouse", "name":"portion7", "value": 50},
+	  {"keyword": "blouse", "name":"portion8", "value": 58}
+	];
+
+	var visualization = d3plus.viz()
+	  .container("#viz")
+	  .data(data)
+	  .type("box")
+	  .id("name")
+	  .x({"value": "keyword", "grid": false, "lines": false})
+	  .y({"value": "value", "grid": false, "lines": false})
+	  .background("white")
+	  .draw();
+
+	/*
+	// Do box plots	
+	var data = [
+	  {"year": 1991, "name":"alpha", "value": 15},
+	  {"year": 1992, "name":"alpha", "value": 34},
+	  {"year": 1991, "name":"alpha2", "value": 17},
+	  {"year": 1992, "name":"alpha2", "value": 65},
+	  {"year": 1991, "name":"beta", "value": 10},
+	  {"year": 1992, "name":"beta", "value": 10},
+	  {"year": 1991, "name":"beta2", "value": 40},
+	  {"year": 1992, "name":"beta2", "value": 38},
+	  {"year": 1991, "name":"gamma", "value": 5},
+	  {"year": 1992, "name":"gamma", "value": 10},
+	  {"year": 1991, "name":"gamma2", "value": 20},
+	  {"year": 1992, "name":"gamma2", "value": 34},
+	  {"year": 1991, "name":"delta", "value": 50},
+	  {"year": 1992, "name":"delta", "value": 43},
+	  {"year": 1991, "name":"delta2", "value": 17},
+	  {"year": 1992, "name":"delta2", "value": 35}
+	];
+	var visualization = d3plus.viz()
+	  .container("#viz")
+	  .data(data)
+	  .type("box")
+	  .id("name")
+	  .x("year")
+	  .y("value")
+	  .time("year")
+	  .draw();
+	*/
+	
+}
+
+$(document).ready(function() {
+	var dt = $('#datatable');
+    dt.DataTable( {
+        "order": [[ 1, "desc" ]],
+        paging: false,
+        "info": false,
+        searching: false
+    } );
+} );
+
+//Returns a function to compute the interquartile range.
+function iqr(k) {
+  return function(d, i) {
+    var q1 = d.quartiles[0],
+        q3 = d.quartiles[2],
+        iqr = (q3 - q1) * k,
+        i = -1,
+        j = d.length;
+    while (d[++i] < q1 - iqr);
+    while (d[--j] > q3 + iqr);
+    return [i, j];
+  };
+}
+
+</script>
+
+</head>
+
+<body onload="onReady();">
+
+	<nav class="navbar navbar-fixed-top header bg-info">
+		<div class="navbar-header">
+			<a href="#" class="navbar-brand">Science of Interaction | Lines of Business</a>
+		</div>
+	</nav>
+
+
+	<div class="container-fluid" style="margin-top: 70px;">
+
+		<div id="contentwrapper">
+		
+			<div id="leftcolumn" style="">
+				
+				<div class="panel panel-primary">
+				
+					<div class="panel-heading">
+						<h3>Gap</h3>
+					</div>
+					<div class="panel-body text-center">
+					<div class="chart_container">
+						<div id="y_axis1" class="y_axis"></div>
+						<div id="chart1" class="chart"></div>
+					</div>
+					</div>
+															
+				</div>
+				
+				<div>
+				
+				<table id="datatable" class="table table-striped">
+			      <thead>
+			        <tr>
+			          <th>#</th>
+			          <th>New Commodity Short Description Keyword</th>
+			        </tr>
+			      </thead>
+			      <tbody>
+			        <tr>
+			          <th scope="row">1</th>
+			          <td>trousers</td>
+			        </tr>
+			        <tr>
+			          <th scope="row">2</th>
+			          <td>linen</td>
+			        </tr>
+			        <tr>
+			          <th scope="row">3</th>
+			          <td>poly</td>
+			        </tr>
+			        <tr>
+			          <th scope="row">4</th>
+			          <td>COTN</td>
+			        </tr>
+			      </tbody>
+				</table>
+													
+				</div>
+				
+			</div>
+
+			<div id="rightcolumn">
+				
+				<div><img src="images/bn.png" width="325"></div>
+			
+				<div id="viz" style="width: 300px; height: 500px; margin-left: auto; margin-right: auto;"></div>
+			</div>
+
+			<div id="contentcolumn">
+				<table id="datatable" class="table table-striped">
+			      <thead>
+			        <tr>
+			          <th>#</th>
+			          <th>Consignee</th>
+			          <th>Estimated Value</th>
+			          <th>Port of Arrival</th>
+			          <th>Arrival Date</th>
+			          <th>HS Code</th>
+			          <th>Commodity Short Description</th>
+			        </tr>
+			      </thead>
+			      <tbody>
+			        <tr>
+			          <th scope="row">1</th>
+			          <td>THE GAP  FRESNO</td>
+			          <td>10005.78</td>
+			          <td>NEW YORK</td>
+			          <td>8/27/2012</td>
+			          <td>621210</td>
+			          <td>WOMENS COT WVN PANTS</td>
+			        </tr>
+			        <tr>
+			          <th scope="row">2</th>
+			          <td>THE GAP, INC.(AS PRINCIPAL)</td>
+			          <td>3889.48</td>
+			          <td>MIAMI</td>
+			          <td>7/3/2012</td>
+			          <td>621210 620899 620690 620690</td>
+			          <td>MENS  COT KNIT SHIRT</td>
+			        </tr>
+			        <tr>
+			          <th scope="row">3</th>
+			          <td>THE GAP INC</td>
+			          <td>6899.73</td>
+			          <td>NEW YORK</td>
+			          <td>8/7/2012</td>
+			          <td>610910</td>
+			          <td>WOMENS COT POLY LYCRA WOVEN PANTS</td>
+			        </tr>
+			        <tr>
+			          <th scope="row">4</th>
+			          <td>THE GAP  FRESNO</td>
+			          <td>10005.78</td>
+			          <td>NEW YORK</td>
+			          <td>8/27/2012</td>
+			          <td>621210</td>
+			          <td>WOMENS COT WVN PANTS</td>
+			        </tr>
+			        <tr>
+			          <th scope="row">5</th>
+			          <td>THE GAP, INC.(AS PRINCIPAL)</td>
+			          <td>3889.48</td>
+			          <td>MIAMI</td>
+			          <td>7/3/2012</td>
+			          <td>621210 620899 620690 620690</td>
+			          <td>MENS  COT KNIT SHIRT</td>
+			        </tr>
+			        <tr>
+			          <th scope="row">6</th>
+			          <td>THE GAP INC</td>
+			          <td>6899.73</td>
+			          <td>NEW YORK</td>
+			          <td>8/7/2012</td>
+			          <td>610910</td>
+			          <td>WOMENS COT POLY LYCRA WOVEN PANTS</td>
+			        </tr>
+			        <tr>
+			          <th scope="row">4</th>
+			          <td>THE GAP  FRESNO</td>
+			          <td>10005.78</td>
+			          <td>NEW YORK</td>
+			          <td>8/27/2012</td>
+			          <td>621210</td>
+			          <td>WOMENS COT WVN PANTS</td>
+			        </tr>
+			        <tr>
+			          <th scope="row">5</th>
+			          <td>THE GAP, INC.(AS PRINCIPAL)</td>
+			          <td>3889.48</td>
+			          <td>MIAMI</td>
+			          <td>7/3/2012</td>
+			          <td>621210 620899 620690 620690</td>
+			          <td>MENS  COT KNIT SHIRT</td>
+			        </tr>
+			        <tr>
+			          <th scope="row">6</th>
+			          <td>THE GAP INC</td>
+			          <td>6899.73</td>
+			          <td>NEW YORK</td>
+			          <td>8/7/2012</td>
+			          <td>610910</td>
+			          <td>WOMENS COT POLY LYCRA WOVEN PANTS</td>
+			        </tr>
+			      </tbody>
+				</table>
+			</div>
+		</div>
+			
+	</div>
+	<!-- /container -->
+
+</body>
+</html>

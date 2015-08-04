@@ -1,0 +1,87 @@
+body {
+  font-family: Century Gothic;
+}
+
+* {
+  border-radius: 0 !important;
+}
+
+div[data-toggle] {
+	cursor: pointer;
+}
+
+#header {
+	background-color: black;
+}
+
+#title {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14px;
+	color: white;
+}
+
+.side {
+  background-color: #CDCDCD;
+  border-right: 1px solid #eee;	
+}
+
+/* Graph */
+
+.canvas {
+  background: #6c6c6c;
+}
+
+.node {
+  fill: #e2e2e2;
+  stroke: #e2e2e2;
+  transition: fill 0.75s ease;
+}
+
+.node-label {
+  stroke: #6c6c6c;
+}
+
+.node-label-group rect {
+  stroke: #565656;
+}
+
+.selected {
+  fill: #4CA4FC;
+  stroke: #4CA4FC;
+}
+
+.highlighted {
+  fill: #FC8230;
+  stroke: #FC8230;
+}
+
+.read-1 {
+  fill: #888888;
+  stroke: #888888;
+}
+
+.read-2 {
+  fill: #555555;
+  stroke: #555555;
+}
+
+.read-3 {
+  fill: #222222;
+  stroke: #222222;
+}
+
+.read-4 {
+  fill: black;
+  stroke: black;
+}
+
+
+/* Side panel */
+
+div.hr {
+  background: #fff  no-repeat scroll center;
+  margin-left: -10px;
+  width:110%;
+  height:1px;
+}

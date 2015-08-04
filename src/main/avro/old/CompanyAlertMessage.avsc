@@ -1,0 +1,11 @@
+{
+  "namespace": "gov.pnnl.aim.avro.dint",
+  "type" : "record",
+  "name" : "CompanyAlertMessage",
+  "fields" : [
+	    {"name" : "company", "type" : "string"},
+	    {"name" : "lob", "type" : "string"},
+	    {"name" : "message", "type" : "string"},
+	    {"name" : "score", "type" : "double"}
+	  ]
+}

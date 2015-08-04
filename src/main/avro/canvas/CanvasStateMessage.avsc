@@ -1,0 +1,30 @@
+{
+  "namespace": "gov.pnnl.aim.discovery.streams.avro",
+  "type" : "record",
+  "name" : "CanvasStateMessage",
+  "fields" : [
+	    {"name" : "canvas", "type" : "string"},
+	    {"name" : "interaction", "type" : "string"},
+	    {"name" : "docs", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : {
+					"type" : "record",
+					"name" : "DocVector",
+					"fields" : [
+						    {"name" : "docid", "type" : "string"},
+						    {"name" : "label", "type" : "string"},
+						    {"name" : "vector", "type":
+								{
+									"type"  : "array",
+								    "name"  : "value",
+									"items" : "double"
+								}
+							}
+					]
+		    	}
+			}	    	
+		}
+	  ]
+}

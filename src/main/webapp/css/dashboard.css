@@ -1,0 +1,215 @@
+/*
+ * Base structure
+ */
+
+ html {
+  height: 100%;
+}
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+  /*height: 100%;*/
+  overflow-y: hidden;
+  font-family: Century Gothic;
+}
+
+.modal-open {
+    overflow: hidden;
+}
+
+/*
+ * Global add-ons
+ */
+
+ .sub-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+ .navbar-fixed-top {
+  border: 0;
+}
+
+/* Sidebar */
+
+.sidebar {
+  /*position: fixed;
+  top: 51px;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  display: block;
+  padding: 20px;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+  background-color: #f5f5f5;
+  /*border-right: 1px solid #eee;*/
+}
+
+.nav-sidebar {
+  margin-right: -21px; /* 20px padding + 1px border */
+  margin-bottom: 20px;
+  margin-left: -20px;
+}
+
+.document {
+  fill: white;
+  stroke: black;
+}
+
+.cluster {
+  fill: white;
+  stroke: black;
+}
+
+.selected[style] {
+  fill: blue !important;
+  stroke: blue !important;
+}
+
+.selected circle[style] {
+  fill: blue !important;
+  stroke: blue !important;
+}
+
+.selected rect[style] {
+  fill: blue !important;
+  stroke: blue !important;
+}
+
+rect.document.read {
+  opacity: 0.6;
+}
+
+.text-node {
+  font-family: "Arial";
+  font-size: 10px;
+  fill: "black";
+}
+
+.node-label {
+  font-size: 12px;
+  fill: white;  
+  stroke: transparent;
+  font-weight: bold;
+}
+
+.dropTarget circle[style] {
+  fill: green !important;
+  stroke: green !important;
+}
+
+.dropTarget rect[style] {
+  fill: green !important;
+  stroke: green !important;
+}
+
+/* Main content */
+
+.main {
+  /*margin-bottom: 50px;*/
+  padding: 0;
+  /*padding-bottom: 50px;*/
+  height: 100%;
+  /*position: fixed;*/
+}
+
+.page-header {
+  margin-top: 0;
+}
+
+.canvas {
+  background: #E1E1E1;
+  font-size: 7px;
+}
+
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+
+.feature {
+  color: blue;
+  font-weight: bold;
+}
+
+.annotated {
+  background: #fff2a8;
+}
+
+.annotated:hover {
+  background: #ffb7b7;
+  cursor: pointer;
+}
+
+#text-viewer div::selection {
+  background: #fff2a8;
+}
+
+#text-viewer div::-moz-selection {
+  background: #fff2a8;
+}
+
+#text-screen {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0,0,0,.75);
+	display:none;
+}
+
+#text-viewer-wrapper {
+	position: absolute;
+}
+
+#read-button {
+	position: absolute;
+	left: 45%;
+	top: 50%;
+}
+
+/* DOCUMENT VIEWER TYPES */
+/*
+.viewtext #doccluster {
+  display: none;
+}
+
+.viewtext #doctext {
+  display: inline;
+}
+
+.viewcluster #doccluster {
+  display: inline;
+}
+
+.viewcluster #doctext {
+  display: none;
+}
+*/
+
+/* columns of same height styles */
+
+.row-full-height {
+  height: 100%;
+}
+.col-full-height {
+  height: 100%;
+  vertical-align: top;
+}
+.row-same-height {
+  display: table;
+  width: 100%;
+  /* fix overflow */
+  table-layout: fixed;
+}
+.col-xs-height {
+  display: table-cell;
+  float: none !important;
+}

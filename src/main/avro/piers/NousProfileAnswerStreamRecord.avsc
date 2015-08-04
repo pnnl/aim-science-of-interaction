@@ -1,0 +1,18 @@
+{
+  "namespace": "gov.pnnl.aim.af.avro",
+  "type" : "record",
+  "name" : "NousProfileAnswerStreamRecord",
+  "fields" : [
+        {"name" : "version", "type" : "int"},
+        {"name" : "uuid", "type" : "string"},
+        {"name" : "timestemp", "type" : "long"},
+        {"name" : "profile", "type":
+            {
+                "type"  : "array",
+                "name"  : "value",
+                "items" : "string"
+            }
+        },
+        {"name" : "source", "type" : "string"}
+  ]
+}

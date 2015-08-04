@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="lib/jquery-ui-1.11.2/jquery-ui.css">
+	<link rel="stylesheet" href="lib/jquery-ui-1.11.2/jquery-ui.theme.css">
+	<script type="text/javascript" src="lib/jquery/jquery-1.11.1.js"></script> 
+	<script type="text/javascript" src="lib/jquery-ui-1.11.2/jquery-ui.js"></script> 
+	<script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+    <style>
+      rect.bordered {
+        stroke: #fff;
+        stroke-width:2px;   
+      }
+
+      text.mono {
+        font-size: 9pt;
+        font-family: Consolas, courier;
+        fill: #aaa;
+      }
+
+      text.monored {
+        font-size: 9pt;
+        font-family: Consolas, courier;
+        font-weight: bold;
+        fill: #aa0000;
+      }
+      
+      text.axis-workweek {
+        fill: #000;
+      }
+
+      text.axis-worktime {
+        fill: #000;
+      }
+      
+	  .line {
+	    fill: none;
+	    stroke: #081D58;
+	    stroke-width: 1.5px;
+	  }
+	
+	  .area {
+	    fill: #DFF2F4;
+	    //fill: #41B6C4;
+	  }
+	  
+	  .errorLabel {
+	    color: red;
+	  }
+    </style>
+    <script src="http://d3js.org/d3.v3.js"></script>
+  </head>
+  <body>
+  
+  	<nav class="navbar navbar-default">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <a class="navbar-brand" href="#">
+	        Science of Interaction | Bioreactor
+	      </a>
+	    </div>
+	  </div>
+	</nav>
+ 
+	<div class="container-fluid" id="container">
+		<div>
+		  <div style="float: left; margin-top: 65px; ">
+		    <h3>NMR Spectra</h3>
+		    <p>&nbsp;</p>
+		  	<div id="lines-chart" style="width: 350px;"></div>
+		  </div>
+		  <div id="heatmap-chart" style="width: 960px; float: left;"></div>
+		</div>
+		<!-- 
+		<div class="row">
+		  <div class="col-md-8" style="margin-right: 0px;"><div id="heatmap-chart" style="width: 960px;"></div></div>
+		  <div class="col-md-4" style="top: 100px;"><div id="lines-chart" style="width: 350px;"></div></div>
+		</div>
+		 -->
+	</div>
+
+    <script type="text/javascript">
+    var chartMatrix = (function () {
+
+    	var margin = { top: 150, right: 30, bottom: 100, left: 150 },
+          width = 960 - margin.left - margin.right,
+          height = 1000 - margin.top - margin.bottom,
+          gridSize = Math.floor(width / 32),
+          legendElementWidth = gridSize*2,
+          buckets = 9,
+          colors = ["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"], // alternatively colorbrewer.YlGnBu[9]
+          eLabels = ['', '', 'NMR is angry', '', '', '', '', '', '', '', '', '', 'NMR Error', '', '', '', '', '', '', '', '', '', '', '', ''],
+          rowLabels = ['11:26 AM - Sample 25', '11:19 AM - Sample 24', '11:12 AM - Sample 23', '11:05 AM - Sample 22', '10:58 AM - Sample 21', '10:51 AM - Sample 20', '10:44 AM - Sample 19', '10:37 AM - Sample 18', '10:30 AM - Sample 17', '10:23 AM - Sample 16', '10:16 AM - Sample 15', '10:09 AM - Sample 14', '10:02 AM - Sample 13', '9:55 AM - Sample 12', '9:48 AM - Sample 11', '9:41 AM - Sample 10', '9:34 AM - Sample 9', '9:27 AM - Sample 8', '9:20 AM - Sample 7', '9:13 AM - Sample 6', '9:06 AM - Sample 5', '8:59 AM - Sample 4', '8:52 AM - Sample 3', '8:45 AM - Sample 2', '8:38 AM - Sample 1'],
+          colLabels = ['1-Methylhistidine', '2-Ketobutyric acid', 'Deoxyuridine', '4-Pyridoxic acid', 'Alpha-ketoisovaleric acid', '3-Methoxytyramine', '(S)-3-Hydroxyisobutyric acid', 'Ureidopropionic acid', 'Carnosine', 'Adenine', 'Butyric acid', 'Acetic acid', 'Betaine', 'Melibiose', 'Adenosine', 'Androstenedione', 'Cellobiose', 'Cyclic AMP', 'Acetoacetic acid', 'Adenosine 3\'5\'-diphosphate', 'Creatine', 'Cholesterol', 'Pipecolic acid', 'Deoxyinosine', 'Dihydrouracil', 'Dehydroepiandrosterone', 'Glycerophosphocholine', 'Dimethylamine', 'Cytidine', 'Dimethylglycine'];
+
+
+      d3.tsv("data.tsv",
+        function(d) {
+          return {
+            day: +d.day,
+            hour: +d.hour,
+            value: +d.value
+          };
+        },
+        function(error, data) {
+          var colorScale = d3.scale.quantile()
+              .domain([0, buckets - 1, d3.max(data, function (d) { return d.value; })])
+              .range(colors);
+
+          var svg = d3.select("#heatmap-chart").append("svg")
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+              .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+          var dayLabels = svg.selectAll(".dayLabel")
+              .data(rowLabels)
+              .enter().append("text")
+                .text(function (d) { return d; })
+                .attr("x", 0)
+                .attr("y", function (d, i) { return i * gridSize; })
+                .style("text-anchor", "end")
+                .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
+                .attr("class", function (d, i) { return ((i >= 0 && i <= 4) ? "dayLabel mono axis axis-workweek" : "dayLabel mono axis"); });
+
+          var errLabels = svg.selectAll(".errLabel")
+              .data(eLabels)
+              .enter().append("text")
+                .text(function (d) { return d; })
+                .attr("x", width - 50)
+                .attr("y", function (d, i) { return i * gridSize; })
+                .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
+                .attr("class", "monored");
+          
+          var timeLabels = svg.selectAll(".timeLabel")
+              .data(colLabels)
+              .enter().append("text")
+                .text(function(d) { return d; })
+                .attr("transform", function(d, i) { 
+                    return "translate(" + ( i * gridSize) + ",0)"
+                            + "translate(" + gridSize / 2 + ", -6)rotate(-45)";
+                    } )
+                .style("text-anchor", "begin")
+                .attr("class", function(d, i) { return ((i >= 8 && i <= 16) ? "timeLabel mono axis axis-worktime" : "timeLabel mono axis"); 
+             });
+
+          var heatMap = svg.selectAll(".hour")
+              .data(data)
+              .enter().append("rect")
+              .attr("x", function(d) { return (d.hour - 1) * gridSize; })
+              .attr("y", function(d) { return (d.day - 1) * gridSize; })
+              .attr("rx", 4)
+              .attr("ry", 4)
+              .attr("class", "hour bordered")
+              .attr("width", gridSize)
+              .attr("height", gridSize)
+              .style("fill", colors[0]);
+
+          heatMap.transition().duration(1000)
+              .style("fill", function(d) { return colorScale(d.value); });
+
+          heatMap.append("title").text(function(d) { return d.value; });
+             
+      });
+    })();
+
+    
+    var chartLines = (function () {
+
+		var margin = {top: 1, right: 2, bottom: 2, left: 1},
+		    width = 350 - margin.left - margin.right,
+		    height = 21 - margin.top - margin.bottom;
+		
+		var parseDate = d3.time.format("%b %Y").parse;
+		
+		var x = d3.time.scale()
+		    .range([0, width]);
+		
+		d3.tsv("spectra.tsv", type, function(error, data) {
+		  var symbols = d3.nest()
+		      .key(function(d) { return d.symbol; })
+		      .entries(data);
+		
+		  x.domain([
+		    d3.min(symbols, function(symbol) { return symbol.values[0].date; }),
+		    d3.max(symbols, function(symbol) { return symbol.values[symbol.values.length - 1].date; })
+		  ]);
+		
+		  var svg = d3.select("#lines-chart").selectAll("svg")
+		      .data(symbols)
+		    .enter().append("svg")
+		      .attr("width", width + margin.left + margin.right)
+		      .attr("height", height + margin.top + margin.bottom)
+		    .append("g")
+		      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+		      .each(function(symbol) {
+		        symbol.y = d3.scale.linear()
+		            .domain([0, d3.max(symbol.values, function(d) { return d.price; })])
+		            .range([height, 0]);
+		      });
+		
+		  svg.append("path")
+		      .attr("class", "area")
+		      .attr("d", function(symbol) {
+		        return d3.svg.area()
+		            .x(function(d) { return x(d.date); })
+		            .y1(function(d) { return symbol.y(d.price); })
+		            .y0(height)
+		            (symbol.values);
+		      });
+		
+		  svg.append("path")
+		      .attr("class", "line")
+		      .attr("d", function(symbol) {
+		        return d3.svg.line()
+		            .x(function(d) { return x(d.date); })
+		            .y(function(d) { return symbol.y(d.price); })
+		            (symbol.values);
+		      });
+		  /* 
+		  svg.append("text")
+		      .attr("x", width - 6)
+		      .attr("y", height - 6)
+		      .style("text-anchor", "end")
+		      .text(function(symbol) { return symbol.key; });
+		  */
+		});
+
+		function type(d) {
+		  d.price = +d.price;
+		  d.date = parseDate(d.date);
+		  return d;
+		}
+		
+    })();
+
+	</script>
+  </body>
+</html>

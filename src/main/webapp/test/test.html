@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Discovery|Canvas">
+  <meta name="author" content="shawn.hampton@pnnl.gov">
+  <link rel="icon" href="../../favicon.ico">
+
+  <title>discovery|canvas</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+  <!-- Custom styles for this template -->
+  <link href="dashboard.css" rel="stylesheet">
+  <script type="text/javascript" src="../js/d3/d3.v3.js"></script>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">discovery|canvas</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div id="vis" class="col-xs-9 main">
+        <!-- VIS SECTION -->
+      </div>
+
+      <div class="col-xs-3 col-xs-offset-9 sidebar">
+        <!-- VIEWER SECTION -->
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-inverse navbar-fixed-bottom" role="navigation">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <!-- STATUS SECTION -->
+      </div>
+    </div>
+  </nav>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="docs.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+
+    <script type="text/javascript">
+      $(window).on("resize", function() {
+        var chart = $("#chart"),
+        aspect = chart.width() / chart.height(),
+        container = chart.parent();
+        console.log(aspect + " " + container.width() + ", " + container.height());
+        var targetWidth = container.width();
+        chart.attr("width", targetWidth);
+        chart.attr("height", container.height() - 50);
+      }).trigger("resize");
+
+      $( document ).ready(function() {
+        console.log( "document loaded" );
+        var chart = $("#chart"),
+        aspect = chart.width() / chart.height(),
+        container = chart.parent();
+        var svg = d3.select("#vis").append("svg")
+        .attr("id", "chart")
+        .attr("width", container.width())
+        .attr("height", container.height() - 50);
+        // .attr("viewbox", "0 0 1920 1080");
+        // .attr("perserveAspectRatio", "xMinYMid");
+
+        svg.append("rect")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("fill", "gray");
+      });
+    </script>
+
+  </body>
+  </html>

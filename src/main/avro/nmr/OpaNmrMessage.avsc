@@ -1,0 +1,27 @@
+{
+  "namespace": "gov.pnnl.aim.nmr.avro",
+  "type" : "record",
+  "name" : "OpaNmrMessage",
+  "fields" : [
+        {"name" : "version", "type" : "int"},
+        {"name" : "uuid", "type" : "string"},
+        {"name" : "timestamp", "type" : "string"},
+        {"name" : "fileName", "type" : "string"},
+        {"name" : "rowNumber", "type" : "int"},
+        {"name" : "runNumber", "type" : "int"},
+	    {"name" : "probabilities", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "double"
+			}
+		},
+		{"name" : "abundances", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "double"
+			}
+		}
+	  ]
+}

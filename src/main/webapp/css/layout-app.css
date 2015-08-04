@@ -1,0 +1,127 @@
+#banner {
+  height: 20px;
+}
+
+/* Fixed Height Header */
+#header {
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: left;
+  padding: 10px;
+}
+
+#title {
+  flex: 1 0 auto;
+}
+
+#overflowMenu {
+  flex: 0 0 25px;
+  justify-content: flex-end;
+  /*margin-right: 10px;*/
+}
+
+#mainMenu {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-right: 10px;
+}
+
+.body {
+  overflow: hidden;
+}
+
+/* Side panel */
+
+.side {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 425px;
+}
+
+#documentList {
+  display: flex;
+  flex-direction: column;
+}
+
+#searchBar {
+  flex: 0 0 60px;
+}
+
+.searchForm {
+  display: inline-flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.searchForm .form-group {
+  flex: 1 0 0;
+  margin-bottom: 0;
+}
+
+.searchForm button {
+  flex: 0 0 35px;
+  height: 34px;
+}
+
+#searchTags {
+  padding: 2px 0;
+}
+
+#documentListContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 325px;
+  position: relative;
+}
+
+#documentViewer {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+}
+
+#documentViewerContainer {
+  flex: 1 0 auto;
+  position: relative;
+  background-color: white;
+}
+
+#text-viewer {
+  background-color: white;
+  padding: 0px 10px;
+}
+
+/* Search tags */
+
+.tag {
+  font-size: 12px;
+  padding: .2em .3em .3em;
+  margin: 2px .1em;
+}
+
+.tag a {
+  color: #bbb;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.tag a:hover {
+  opacity: 1.0
+}
+
+.tag .remove {
+  vertical-align: bottom;
+  top: 0;
+}
+
+.tag a {
+  margin: 0 0 0 .3em;
+}
+
+.tag a .glyphicon-white {
+  color: #fff;
+  margin-bottom: 2px;
+}

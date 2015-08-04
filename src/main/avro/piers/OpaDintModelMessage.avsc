@@ -1,0 +1,45 @@
+{
+  "namespace": "gov.pnnl.aim.af.avro",
+  "type" : "record",
+  "name" : "ModelMessage",
+  "fields" : [
+        {"name" : "LOB", "type" : "string"},
+        {"name" : "yes_mean", "type" :
+            {
+                "type" : "array",
+                "name" : "value",
+                "items" : "double"
+            }
+        },
+        {"name" : "yes_stdev", "type" :
+            {
+                "type" : "array",
+                "name" : "value",
+                "items" : "double"
+            }
+        },
+        {"name" : "no_mean", "type" :
+            {
+                "type" : "array",
+                "name" : "value",
+                "items" : "double"
+            }
+        },
+        {"name" : "no_stdev", "type" :
+            {
+                "type" : "array",
+                "name" : "value",
+                "items" : "double"
+            }
+        },
+        {"name" : "influentialness", "type" :
+            {
+                "type" : "array",
+                "name" : "value",
+                "items" : "double"
+            }
+        }
+
+
+  ]
+}

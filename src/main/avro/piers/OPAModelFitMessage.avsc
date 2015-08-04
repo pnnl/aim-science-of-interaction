@@ -1,0 +1,24 @@
+{
+  "namespace": "gov.pnnl.aim.avro.dint",
+  "type" : "record",
+  "name" : "OPAPiersLOBMessage",
+  "fields" : [
+	    {"name" : "company", "type" : "string"},
+	    {"name" : "startdate", "type" : "long"},
+	    {"name" : "enddate", "type" : "long"},
+	    {"name" : "linesofbusiness", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "string"
+			}
+		},
+	    {"name" : "probabilities", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "double"
+			}
+		}
+	  ]
+}

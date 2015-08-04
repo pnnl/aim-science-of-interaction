@@ -1,0 +1,195 @@
+body {
+  font-family: Century Gothic;
+}
+
+* {
+  border-radius: 0 !important;
+}
+
+div[data-toggle] {
+	cursor: pointer;
+}
+
+#header {
+	background-color: black;
+}
+
+#title {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14px;
+	color: white;
+}
+
+.side {
+  background-color: #CDCDCD;
+  border-right: 1px solid #eee;	
+}
+
+.vertical-divider{
+    border-left:1px solid white;
+    height: 35px;
+}
+
+/* Graph */
+
+.canvas {
+  background: #6c6c6c;
+}
+
+.cluster {
+  cursor: default;
+}
+
+.node {
+  transition: all 0.75s ease;
+  fill: #e2e2e2;
+  stroke: #e2e2e2;
+}
+
+.node-label {
+  transition: fill 0.75s ease, stroke 0.75s ease;
+  stroke: #6c6c6c;
+}
+
+.node-label-group rect {
+  stroke: #565656;
+  opacity: 0.7;
+}
+
+.read-1 {
+  fill: #888888;
+  stroke: #888888;
+}
+
+.read-2 {
+  fill: #555555;
+  stroke: #555555;
+}
+
+.read-3 {
+  fill: #222222;
+  stroke: #222222;
+}
+
+.read-4 {
+  fill: black;
+  stroke: black;
+}
+
+.highlighted {
+  fill: #FC8230;
+  stroke: #FC8230;
+}
+
+.selected {
+  fill: #4CA4FC;
+  stroke: #4CA4FC;
+}
+
+.bookmarked {
+  fill: #00ff00;
+  stroke: #00ff00;
+}
+
+.selected g text {
+  stroke: white;
+}
+
+.dropTarget {
+  fill: green !important;
+  stroke: green !important;
+}
+
+.dropTarget text {
+  fill: white !important;
+  stroke: white !important;
+}
+
+
+.label-search {
+  background-color: #FC8230;
+}
+
+/* Side panel */
+
+.toolbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  background-color: #6c6c6c;
+}
+
+#documentListTitle {
+  display: flex;
+  flex-direction: column;
+}
+
+.docTitle {
+  font-size: 18px;
+  color: #5b5b5b;
+  padding: 5px 10px;
+}
+
+#documentListTitle .docCount {
+  font-size: 12px;
+  font-weight: bold;
+  color: black;
+  background-color: #5b5b5b;
+  padding: 5px 10px;
+}
+
+#searchBar {
+  background-color: white;
+}
+
+#documentListContainer {
+  background-color: white;
+}
+
+#documentListContainer .listRow {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1px;
+}
+
+.listIcon {
+  flex: 0 0 30px;
+  padding: 3px;
+  background-color: #f1f1f1;
+  margin-right: 1px;
+  transition: background-color 0.5s ease;
+}
+
+.listTitle {
+  cursor: default;
+  background-color: #f1f1f1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
+  font-size: 13px;
+  transition: background-color 0.5s ease;
+}
+
+.listRow:hover .listIcon {
+  background-color: white;
+}
+
+.listRow:hover .listTitle {
+  background-color: white;  
+}
+
+.annotated {
+  background-color: #00ff00;
+}
+
+.search {
+  background-color: #FC8230;
+}
+
+div.hr {
+  background: #6c6c6c  no-repeat scroll center;
+  width:100%;
+  height:1px;
+}

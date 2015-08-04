@@ -1,0 +1,68 @@
+#banner {
+  height: 20px;
+}
+
+/* Fixed Height Header */
+#header {
+  height: 50px;
+  display: flex;
+  flex-direction: row;
+  align-items: left;
+  padding: 10px;
+}
+
+#title {
+  flex: 1 1;
+}
+
+#mainMenu {
+  flex: 5;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.body {
+  overflow: scroll;
+}
+
+/* Side panel */
+
+.side {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 425px;
+}
+
+#searchBar {
+  flex: 0 0 60px;
+}
+
+.searchForm {
+  display: inline-flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.searchForm .form-group {
+  flex: 1 0 0;
+}
+
+.searchForm button {
+  flex: 0 0 35px;
+  height: 34px;
+}
+
+.card {
+	background-color: #efefef;
+	border: 2px solid blue;
+	padding: 10px;
+	height: 200px;
+	width: 320px;
+	margin-bottom: 20px;
+	display: inline-flex;
+	order: 1;
+	margin: 20px;
+	flex-shrink: 1;
+	flex-basis: auto;
+}

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html ng-app="bioreactor">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Discovery|Canvas">
+    <meta name="author" content="paul.weidert@pnnl.gov">
+    <link rel="icon" href="../../favicon.ico">
+    
+    <title>Science of Interaction | NMR</title>
+
+    <!-- Library CSS -->
+    <link rel="stylesheet" type="text/css" href="../lib/bootstrap/css/bootstrap.min.css">
+
+    <!-- App CSS -->
+    <link rel="stylesheet" type="text/css" href="css/layout-general.css">
+    <link rel="stylesheet" type="text/css" href="css/layout-app.css">
+    <link rel="stylesheet" type="text/css" href="css/theme.css">
+
+    <!-- JS Libs -->
+    <script type="text/javascript" src="../lib/angular/angular.js"></script>
+    <script type="text/javascript" src="../lib/angular/angular-route.min.js"></script>
+    <script type="text/javascript" src="../lib/angular/angular-animate.min.js"></script>
+    <script type="text/javascript" src="../lib/jquery/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="../lib/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../lib/bootstrap/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../lib/d3/d3.v3.js"></script>
+    <script type="text/javascript" src="../lib/custom/moment.min.js"></script>
+    <script type="text/javascript" src="../lib/custom/colorbrewer.min.js"></script>
+    
+    <!-- Modules -->
+    <script src="js/BioreactorApp2.js"></script>
+    <script src="js/ConfigurationModule.js"></script> 
+</head>
+
+<body class="body" ng-controller="bioController">
+    <div id="header" class="vertical-center" role="navigation">
+        <div id="title" class="title">
+            Science of Interaction | NMR
+        </div>
+        <button class="navButton title" ng-click="stream()">
+            <span class="glyphicon glyphicon-play" aria-hidden="true" style="margin-right: 5px;"></span>
+            STREAM
+        </button>
+        <button class="navButton title" ng-click="stopStream()">
+            <span class="glyphicon glyphicon-stop" aria-hidden="true" style="margin-right: 5px; margin-left: 25px"></span>
+            STOP
+        </button>
+    </div>
+
+    <div class="content">
+        <div id="visualization" class="main">
+            <compound-labels ng-click="closePopup()"></compound-labels>
+
+            <div id="sampleHistory">
+            
+            
+            
+                <div class="sample" ng-animate="'animate'" ng-repeat="sample in sampleHistory track by sample.sampleID">
+                    <div class="sampleTimestamp vertical-center">{{sample.timestamp}}</div>
+                    <div class="sampleLabel center">{{sample.sampleID}}</div>
+                    <div class="vertical-center" ng-class="sample.error.code !== 3 ? 'sampleError' : 'sampleNoError'">
+                        <span class="glyphicon glyphicon-alert" aria-hidden="true" ng-show="sample.error.code !== 1" ng-click="errorPopup(sample)"></span>
+                    </div>
+                    <div class="sampleChart"><single-sample-chart ranges="ranges" sample="sample"></single-sample-chart></div>
+
+                    <div class="sampleView center"><span class="glyphicon glyphicon-eye-close eyeclose" ng-click="showSpectra(sample)"></span></div>
+                    <div class="sampleSpectra"><single-spectra sample="sample"></single-spectra></div>
+                </div>
+                
+                <div class="popup">
+	                <div class="pointer"></div>
+	                <div class="popupInfo"></div>
+	                <button ng-mouseenter="hover('edit')" ng-mouseleave="hoverOut('edit')" id="edit" class="hover">
+	                    <span class="glyphicon glyphicon-edit"></span>
+	                </button>
+	                <button id="popupClose" ng-mouseenter="hover('popupClose')" ng-mouseleave="hoverOut('popupClose')" class="hover">
+	                    <span class="glyphicon glyphicon-remove-sign"></span>
+	                </button>
+	                <div class="editInfo">
+	                    <div class="editMessage"></div>
+	                    <button id="editYes"><span class="glyphicon glyphicon-ok"></span></button>
+	                    <button id="editNo"><span class="glyphicon glyphicon-remove"></span></button>
+	                </div>
+	            </div>
+	            
+	            
+            </div>
+
+            <div id="graph" ng-click="closePopup()">
+                <div class="spacer">
+                    <div>Spectra</div>
+                </div>
+                <spectra-graph></spectra-graph>
+            </div>
+            
+            <div id="compoundGraph" ng-click="closePopup()">
+                <div class="spacer">
+                    <div>Compound History</div>
+                </div>
+                <compound-graph></compound-graph>
+            </div>
+
+            <div id="legend">
+                <div id="abTitle" class="center">Abundance</div>
+                <div id="probContent" class="legCont center">
+                    <div class="cont">
+                        <svg width="32" height="32">
+                            <rect width="8" height="8" x="12" y="12" fill="black">
+                            </rect>
+                        </svg>
+                    </div>
+                    <div class="cont middle">...</div>
+                    <div>
+                        <svg width="32" height="32">
+                            <rect width="30" height="30" x="1" y="1" fill="black" rx="4" ry="4">
+                            </rect>
+                        </svg>
+                    </div>
+                </div>
+                <div id="probTitle" class="center">Probability</div>
+                <div id="abContent" class="legCont center">
+                    <div class="cont">
+                        <svg width="32" height="32">
+                            <rect width="30" height="30" x="1" y="1" fill="rgb(241, 238, 246)" rx="4" ry="4">
+                            </rect>
+                        </svg>
+                    </div>
+                    <div class="cont middle">...</div>
+                    <div class="cont">
+                        <svg width="32" height="32">
+                            <rect width="30" height="30" x="1" y="1" fill="rgb(4, 90, 141)" rx="4" ry="4">
+                            </rect>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+<!-- 
+            <div class="popup">
+                <div class="pointer"></div>
+                <div class="popupInfo"></div>
+                <button ng-mouseenter="hover('edit')" ng-mouseleave="hoverOut('edit')" id="edit" class="hover">
+                    <span class="glyphicon glyphicon-edit"></span>
+                </button>
+                <button id="popupClose" ng-mouseenter="hover('popupClose')" ng-mouseleave="hoverOut('popupClose')" class="hover">
+                    <span class="glyphicon glyphicon-remove-sign"></span>
+                </button>
+                <div class="editInfo">
+                    <div class="editMessage"></div>
+                    <button id="editYes"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button id="editNo"><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            </div>
+ -->
+            
+            <div class="errPopup">
+                <div class="errPointer"></div>
+                <div class="errPopupInfo"></div>
+                <button ng-mouseenter="hover('errEdit')" ng-mouseleave="hoverOut('errEdit')" id="errEdit">
+                    <span class="glyphicon glyphicon-edit"></span>
+                </button>
+                <button id="errPopupClose" ng-mouseenter="hover('errPopupClose')" ng-mouseleave="hoverOut('errPopupClose')">
+                    <span class="glyphicon glyphicon-remove-sign"></span>
+                </button>
+                <div class="errEditInfo">
+                    <div class="errEditMessage"></div>
+                    <button id="errEditYes"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button id="errEditNo"><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            </div>
+        </div>
+    </div> 
+    
+    <script>
+        
+    </script>
+</body>
+</html>

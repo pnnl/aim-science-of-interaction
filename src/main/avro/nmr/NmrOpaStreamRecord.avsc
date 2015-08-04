@@ -1,0 +1,47 @@
+{
+  "namespace": "gov.pnnl.aim.af.avro",
+  "type" : "record",
+  "name" : "NmrOpaStreamRecord",
+  "fields" : [
+        {"name" : "version", "type" : "int"},
+        {"name" : "uuid", "type" : "string"},
+        {"name" : "timestamp", "type" : "long"},
+        {"name" : "fileName", "type" : "string"},
+        {"name" : "rowNumber", "type" : "int"},
+        {"name" : "runNumber", "type" : "int"},
+        {"name" : "values", "type":
+            {
+                "type"  : "array",
+                "name"  : "value",
+                "items" : "double"
+            }
+        },
+        {"name" : "valuesNotSummed", "type":
+            {
+                "type"  : "array",
+                "name"  : "value",
+                "items" : "double"
+            }
+        },
+        {"name" : "annotation", "type":
+            {
+                "name" : "values",
+                "type" : "array",
+                "items" :
+                    {
+                        "type"  : "array",
+                        "name"  : "value",
+                        "items" : "double"
+                    }
+            }
+        },
+        {"name" : "key", "type":
+            {
+                "type"  : "array",
+                "name"  : "value",
+                "items" : "double"
+            }
+        },
+        {"name" : "status", "type" : "int" }
+  ]
+}

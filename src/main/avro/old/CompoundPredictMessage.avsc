@@ -1,0 +1,14 @@
+{
+  "namespace": "gov.pnnl.aim.streams.avro",
+  "type" : "record",
+  "name" : "CompoundPredictMessage",
+  "fields" : [
+	    {"name" : "probabilities", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "double"
+			}
+		}
+	  ]
+}

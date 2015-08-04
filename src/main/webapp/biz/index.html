@@ -1,0 +1,514 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="../../favicon.ico">
+
+<title>AIM Science of Interaction | Strategic Surprise</title>
+
+<!-- Bootstrap core CSS -->
+<link href="../lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="css/legend.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<link href="css/bubbles.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="../lib/rickshaw/rickshaw.css">
+
+<style>
+.chart_container {
+        position: relative;
+        font-family: Arial, Helvetica, sans-serif;
+}
+.chart {
+        position: relative;
+        left: 10px;
+}
+.y_axis {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 10px;
+}
+.center-block {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.axis path{
+  stroke-width: 1px!important;
+}
+
+#contentwrapper{
+float: right;
+width: 100%;
+margin-left: -700px; /*Set left margin to -(leftColumnWidth + RightColumnWidth)*/
+}
+
+#contentcolumn{
+margin-left: 700px; /*Set left margin to (leftColumnWidth + RightColumnWidth)*/
+}
+
+#leftcolumn{
+float: left;
+width: 350px; /*Width of left column in pixels*/
+}
+
+#rightcolumn{
+float: left;
+width: 350px; /*Width of right column in pixels*/
+}
+.chart .background {
+  fill: white;
+}
+.chart path {
+  fill: none;
+  stroke-width: 1px;
+}
+.axis {
+ font: 10px sans-serif;
+}
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+/*.x.axis path {
+    display: none;
+}*/
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+.yes {
+    fill: steelblue;
+    fill-opacity: .3;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+.no {
+    fill: darkred;
+    fill-opacity: .3;
+    stroke: darkred;
+    stroke-width: 1.5px;
+}
+.current {
+    fill: black;
+    fill-opacity: .5;
+    stroke: black;
+    stroke-width: 1.5px;
+}
+
+.Line path{
+  fill: none;
+}
+
+#dendrogram-holder {
+  border: .5px solid #a1a1a1;
+  max-height: 500px;
+  height: 500px;
+  overflow: scroll;
+}
+
+.Dendrogram path{
+  stroke: #b1b1b1;
+  fill: none;
+}
+
+.Dendrogram .root {
+  text-anchor: end;
+}
+
+.Dendrogram .internal {
+  text-anchor: middle;
+}
+
+.Dendrogram .internal circle {
+  stroke: none;
+  fill: none;
+}
+
+.Dendrogram .leaf {
+  text-anchor: start;
+}
+
+.Dendrogram .background {
+  stroke: none;
+  fill: none;
+}
+
+[depth='0'] {
+  visibility: hidden;
+}
+
+</style>
+
+<script type="text/javascript" src="js/d3.v3.min.js"></script>
+<script type="text/javascript" src="../lib/d3/d3plus.js"></script>
+<script type="text/javascript" src="../lib/rickshaw/rickshaw.js"></script>
+<script type="text/javascript" src="../lib/jquery/jquery-1.11.1.js"></script>
+<script type="text/javascript" src="../lib/jquery/jquery.dataTables.js"></script>
+<script type="text/javascript" src="../lib/bootstrap/js/bootstrap.min.js"></script>
+<script src="js/d3.chart.js"></script>
+<!-- <script src="js/uchd.charts-0.0.12.js"></script> -->
+<script src="http://172.18.4.252/js/uchd.charts-0.0.12.js"></script>
+<script src="js/chart.bubble.js"></script>
+<script type="text/javascript" src="js/bootstrap-slider.js"></script>
+<script type="text/javascript" src="js/distro.js"></script>
+<script type="text/javascript" src="js/biz.js"></script>
+
+<script>
+
+//var cs = ['Ford', 'Toyota', 'Hyundai', 'Chrysler', 'Nissan', 'Audi/Volkswagen', 'BMW', 'Mazda', 'General Motors', 'Honda', 'JC Penny', 'Sears', 'Crate & Barrel', 'Gander Mountain', 'Walmart', 'Costco', 'Target', 'Kmart', 'Fred Meyer', 'Bed Bath and Beyond', 'Williams-Sanoma', 'Adidas', 'Nike', 'The FORD', 'Old Navy', 'J Crew', 'Banana Republic', 'Levi', 'Gymboree', 'Hennes & Mauritz', 'Columbia Sportswear', 'Ralph Lauren', 'Guess', 'LG Electronics', 'General Electric', 'Bosch', 'Electrolux', 'Fisher & Paykel', 'Whirlpool', 'Dacor'];
+//var companies = ['Toyota', 'Ford', 'Honda', 'Hyundai', 'Chrysler', 'Nissan', 'Audi', 'Volkswagen', 'BMW', 'Mazda', 'General Motors'];
+var companies = ['Toyota', 'Honda', 'Chrysler', 'Audi', 'BMW', 'Mazda', 'General Motors'];
+var slider;
+
+function simProbability() {
+	for (var i = 0; i < companies.length; i++) {
+
+		var probs = [];
+		for (var j = 0; j < biz.linesOfBusiness.length; j++) {
+			var yv = 0;
+			if (j == 2) {
+				yv = .85;
+			} else if (j == 3) {
+				yv = .82;
+			} else if (j == 0) {
+				yv = .28;
+			} else if (j == 1) {
+				yv = .26;
+			} else if (j == 4) {
+				yv = .24;
+			} else if (j == 5) {
+				yv = .22;
+			} else if (j == 6) {
+				yv = .2;
+			}
+
+			var prob = yv; //(j / biz.linesOfBusiness.length) + (Math.random() * .1); //Math.random() / ((j*2) + 1); //yv + Math.random() * 10;
+			if (Math.random() < .05) {
+				prob += .2;
+			}
+			probs.push(prob);
+		}
+		biz.addLOBProbability(companies[i], probs);
+
+		if (Math.random() < .1) {
+			biz.setAlert(companies[i], true);
+		}
+		if (Math.random() < .9) {
+			biz.setAlert(companies[i], false);
+		}
+	}
+}
+
+function tick() {
+
+    console.log("tick");
+    var url = "/discoveryStreaming/lob/state";
+
+	$.ajax({
+		url: url,
+		type: 'GET',
+		success: function(state, status) {
+			for (i = 0; i < state.companyStates.length; i++) {
+				var combinedProbs = [];
+				for (j = 0; j < state.companyStates[i].opaprobabilities.length; j++) {
+					combinedProbs.push(state.companyStates[i].opaprobabilities[j]);
+					combinedProbs.push(state.companyStates[i].shyreProbabilities[j]);
+				}
+				biz.addLOBProbability(state.companyStates[i].companyName, combinedProbs);
+				biz.setAlert(state.companyStates[i].companyName, state.companyStates[i].alert);
+			}
+		}
+	});
+}
+
+function loadDetails() {
+
+	console.log(location.hash);
+	if (location.hash.length > 0) {
+
+		var compID = location.hash.substring(1);
+
+		$('#view-dashboard').hide();
+		$('#view-details').show();
+
+		biz.displayDetails(compID);
+
+
+	} else {
+		$('#view-dashboard').show();
+		$('#view-details').hide();
+		$("#dropcompname").text("Company");
+		//$("#droplob").text("Line of Business");
+
+		biz.hideDetails();
+    	resizeCharts();
+	}
+}
+
+var tickSeconds = 2;
+var simInterval = null;
+var tickInterval = null;
+
+function clearTickIntervals() {
+	 if (simInterval != null) {
+		 clearInterval(simInterval);
+	 }
+	 if (tickInterval != null) {
+		 clearInterval(tickInterval);
+	 }
+}
+
+function onReady() {
+    console.log("init");
+
+    var url = "/discoveryStreaming/lob/init";
+
+	$.ajax({
+		url: url,
+		type: 'GET',
+		success: function(status) {
+			console.log("init complete");
+		}
+	});
+
+	biz.initApp();
+
+	for (var i = 0; i < companies.length; i++) {
+		var colID = (i % 2) + 1;
+		biz.addCompany(colID, i, companies[i], "chart" + i, "axis" + i);
+		biz.init(companies[i]);
+	}
+
+	//setInterval(tick, tickSeconds * 1000);
+
+	$('#view-details').hide();
+
+	window.onhashchange = loadDetails;
+
+	 $('#streamsim').on('click', function () {
+		 clearTickIntervals();
+		 simInterval = setInterval(simProbability, tickSeconds * 1000);
+	 });
+
+	 $('#streamstart').on('click', function () {
+		 clearTickIntervals();
+		 tickInterval = setInterval(tick, tickSeconds * 1000);
+		 $.ajax({
+			url: "/discoveryStreaming/lob/stream/start",
+			type: 'GET',
+			success: function(status) {
+				console.log("init complete");
+			}
+		 });
+	 });
+
+	 $('#streampause').on('click', function () {
+		 clearTickIntervals();
+		 $.ajax({
+			url: "/discoveryStreaming/lob/stream/stop",
+			type: 'GET',
+			success: function(status) {
+				console.log("init complete");
+			}
+		 });
+	 });
+
+     slider = $('#threshold-slider').slider({
+     value: 0.3,
+     min: 0,
+     max: 1,
+     step: .1,
+     tooltip: 'hide'
+   })
+   .on('slide', updateThreshold)
+   .data('slider');
+
+   $('#threshold').val(slider.getValue());
+   
+   loadDetails();
+}
+
+function updateThreshold() {
+  $('#threshold').val(slider.getValue().toPrecision(1));
+  for(var c in biz.companies) {
+     // console.log(c.graph);
+     biz.companies[c].graph.threshold(slider.getValue().toPrecision(1));
+     biz.companies[c].graph.draw(biz.companies[c].graph.data);
+     // console.log(biz.companies[c].graph);
+  }
+}
+
+function chartChanged() {
+  for(var c in biz.companies) {
+    // console.log(biz.companies[c]);
+    var chartType = document.getElementById("chartSelector").value;
+     biz.changeChartType(chartType, biz.companies[c].id, biz.companies[c].name);
+     biz.init(biz.companies[c].name);
+  }
+}
+
+function resizeCharts() {
+  biz.chartWidth = Math.max(350, $("#column1").width());
+  biz.chartHeight = parseInt($(window).height()*.82);
+  for(var c in biz.companies) {
+     biz.resizeChart(biz.companies[c].id, biz.companies[c].name);
+  }
+}
+
+$(window).resize( function() {
+  resizeCharts();
+});
+
+$(window).load( function() {
+	biz.chartWidth = Math.max(350, $("#column1").width());
+    biz.chartHeight = parseInt($(window).height()*.39);
+});
+</script>
+
+</head>
+
+<body onload="onReady();">
+
+	<nav class="navbar navbar-fixed-top navbar-inverse">
+		<div class="container-fluid">
+		    <!-- Brand and toggle get grouped for better mobile display -->
+		    <div class="navbar-header">
+		      <a class="navbar-brand" href="#">Science of Interaction | Strategic Surprise</a>
+		    </div>
+
+		    <!-- Collect the nav links, forms, and other content for toggling -->
+		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		      <ul class="nav navbar-nav">
+		      <!-- 
+		      	<li class="active"><a href="#">Dashboard</a></li>
+		      	<li><a href="#">Drilldown</a></li>   -->
+		        <li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="dropcompname">Company</span> <span class="caret"></span></a>
+		          <ul class="dropdown-menu" id="dropcompanies">
+		          </ul>
+		        </li>
+		        <!--
+		        <li class="dropdown">
+		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="droplob">Line of Business</span> <span class="caret"></span></a>
+		          <ul class="dropdown-menu">
+		            <li><a href="#">Automotive</a></li>
+		            <li><a href="#">Clothing</a></li>
+		            <li><a href="#">Housewares</a></li>
+		            <li><a href="#">Appliances</a></li>
+		          </ul>
+		        </li>
+		         -->
+		      </ul>
+		    </div><!-- /.navbar-collapse -->
+		  </div><!-- /.container-fluid -->
+	</nav>
+
+	<div class="container-fluid" style="margin-top: 70px;" id="view-dashboard">
+		<div class="col-md-10" id="column1"></div>
+		<div class="col-md-2" id="column3">
+      <ul class="options">
+        <li>
+      		<div class='my-legend'>
+      			<div class='legend-title'>Lines of Business</div>
+      			<div class='legend-scale'>
+      			  <ul class='legend-labels' id='leg-labels'></ul>
+      			</div>
+      			<div class='legend-source'>Source: <a href="#link to source">AIM Lines of Business Model Predictions</a></div>
+          </div>
+        </li>
+        <li>
+          <div class="options" id="my-chart-selector">
+            <label for="form-select" class='option-title'>Chart Type</label>
+            <select class="form-control" id="chartSelector" onchange="javascript:chartChanged()">
+              <option value="Line">Line</option>
+              <option value="Area">Area</option>
+              <option value="Bar">Table</option>
+              <option selected="true" value="Flow">Rank</option>
+            </select>
+          </div>
+        </li>
+        <li>
+          <div class="options" id="my-threshold">
+            <label for="form-select" class='option-title'>Threshold:</label><input type='text' id="threshold" class='option-value' readonly/>
+            <br/>
+            <div id="threshold-slider" class='slider'></div>
+          </div>
+        </li>
+        <li>
+            <div class="btn-group" role="group" aria-label="Stream Method">
+              <button type="button" class="btn btn-default" id="streamstart"><span class="glyphicon glyphicon-play" aria-hidden="true"></span></button>
+              <button type="button" class="btn btn-default" id="streampause"><span class="glyphicon glyphicon-pause" aria-hidden="true"></span></button>
+              <button type="button" class="btn btn-default" id="streamsim"><span class="glyphicon glyphicon-random" aria-hidden="true"></span> Simulate</button>
+            </div>
+        </li>
+      </ul>
+		</div>
+	</div>
+
+	<div class="container-fluid" style="margin-top: 70px;" id="view-details">
+
+		<div class="col-md-4">
+
+		    <!-- This is populated by the javascript -->
+			<div id="explainers-opa">
+				<div id="bubble-holder"></div>
+			</div>
+
+		    <!-- This is populated by the javascript -->
+			<div id="explainers-shyre"></div>
+
+<!-- 
+			<div style="margin-right: 20px;">
+				<table id="datatable" class="table">
+			      <thead id="ehead">
+			        <tr></tr>
+			      </thead>
+			      <tbody id="ebody"></tbody>
+				</table>
+			</div>
+ -->
+		</div>
+
+		<div class="col-md-8">
+
+			<div style="height: 395px; overflow: scroll;">
+				<table id="datatable" class="table" style="font-size: 8pt;">
+			      <thead id="datatablehead">
+			        <!-- This is populated by the javascript -->
+			      </thead>
+			      <tbody id="datatablebody">
+			        <!-- This is populated by the javascript -->
+			      </tbody>
+				</table>
+			</div>
+
+			<div id="context">
+	          <div class="panel panel-default" style="margin-top: 10px;">
+	            <div class="panel-heading">
+	              <h5><b>Knowledge Graph</b></h5>
+	            </div>
+	            <div class="panel-body">
+	              <div id="infobox"></div>
+	              <div id="knowlege-status"></div>
+	              <div id="dendrogram-holder"></div>
+	              <div id="infopath"></div>
+	            </div>
+	          </div>
+	        </div>
+
+		</div>
+	</div>
+
+</body>
+</html>

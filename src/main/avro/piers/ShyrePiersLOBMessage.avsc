@@ -1,0 +1,29 @@
+{
+  "namespace": "gov.pnnl.aim.avro.dint",
+  "type" : "record",
+  "name" : "ShyrePiersLOBMessage",
+  "fields" : [
+	    {"name" : "company", "type" : "string"},
+	    {"name" : "lob", "type" : "string"},
+	    {"name" : "score", "type" : "double"},
+	    {"name" : "expectedCount", "type" : "long"},
+	    {"name" : "examplarCompany", "type" : "string"},
+	    {"name" : "probability", "type" : "double"},
+	    {"name" : "highScore", "type" : "boolean"},
+	    {"name" : "isHighScore", "type" : "boolean"},
+	    {"name" : "hscodes", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "string"
+			}
+		},
+	    {"name" : "recordids", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "string"
+			}
+		}
+	  ]
+}

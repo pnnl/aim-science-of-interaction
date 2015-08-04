@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html ng-app="linesOfBusiness">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Discovery|Canvas">
+    <meta name="author" content="shawn.hampton@pnnl.gov">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>science of interaction|lines of business</title>
+
+    <!-- Library CSS -->
+    <link rel="stylesheet" type="text/css" href="../lib/bootstrap/css/bootstrap.min.css">
+
+    <!-- App CSS -->
+    <link rel="stylesheet" type="text/css" href="css/layout-general.css">
+    <link rel="stylesheet" type="text/css" href="css/layout-app.css">
+    <link rel="stylesheet" type="text/css" href="css/theme.css">
+
+    <!-- JS Libs -->
+    <script type="text/javascript" src="../lib/angular/angular.js"></script>
+    <script type="text/javascript" src="../lib/angular/angular-route.min.js"></script>
+    <script type="text/javascript" src="../lib/jquery/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="../lib/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../lib/bootstrap/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../lib/d3/d3.v3.js"></script>
+
+	<!-- Chart Library -->
+	<script src = "http://172.18.4.252/js/d3.chart.js"></script>
+	<script src = "http://172.18.4.252/js/uchd.charts-0.0.1-min.js"></script>
+
+    <!-- Modules -->
+    <script src="js/LinesOfBusinessApp.js"></script>
+    <script src="js/ConfigurationModule.js"></script> 
+</head>
+
+<body class="body" ng-controller="lobController">
+    <div id="header" class="vertical-center" role="navigation">
+        <div id="title">
+            Science of Interaction | Lines of Business
+        </div>
+    </div>
+
+    <div class="content">
+        <div id="visualization" class="main">
+            <div class="card" ng-repeat="business in businessData | orderBy: sortedVal ">
+                <a href="#/{{ business.id }}" class="cardBody btn-link"> {{ business.company| uppercase }} </a>
+						<!-- <br/> {{ business.company }}'s Graph -->
+                <lob_graph chart-data="businessData"></lob_graph>
+            </div>
+        </div>
+    </div> 
+</body>
+<style>
+	.cardBody{
+		height: 20px;
+	}
+	.lobGraph{
+		position: relative;
+		overflow: hidden;		
+}
+</style>
+</html>

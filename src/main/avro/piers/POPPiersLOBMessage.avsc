@@ -1,0 +1,12 @@
+{
+  "namespace": "gov.pnnl.aim.avro.dint",
+  "type" : "record",
+  "name" : "POPPiersLOBMessage",
+  "fields" : [
+	    {"name" : "company", "type" : "string"},
+	    {"name" : "linesofbusiness", "type" : "string"},
+	    {"name" : "date", "type" : "long"},
+	    {"name" : "score", "type" : "double"},
+	    {"name" : "usermsg", "type" : "string"}
+	  ]
+}

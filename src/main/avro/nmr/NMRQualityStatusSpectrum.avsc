@@ -1,0 +1,20 @@
+{
+  "namespace": "gov.pnnl.aim.nmr.avro",
+  "type" : "record",
+  "name" : "CaNmrMessage",
+  "fields" : [
+	    {"name" : "version", "type" : "int"},
+	    {"name" : "timestamp", "type" : "long"},
+	    {"name" : "fileName", "type" : "string"},
+	    {"name" : "rowNumber", "type" : "int"},
+	    {"name" : "sampleID", "type" : "string"},
+	    {"name" : "qualityStatus", "type" : "int"},
+	    {"name" : "spectrum", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "double"
+			}
+		}
+	  ]
+}

@@ -1,0 +1,41 @@
+{
+  "namespace": "gov.pnnl.aim.nmr.avro",
+  "type" : "record",
+  "name" : "NMRSampleMessage",
+  "fields" : [
+	    {"name" : "version", "type" : "int"},
+	    {"name" : "timestamp", "type" : "long"},
+	    {"name" : "fileName", "type" : "string"},
+	    {"name" : "rowNumber", "type" : "int"},
+	    {"name" : "sampleID", "type" : "string"},
+	    {"name" : "qualityStatus", "type" : "int"},
+	    {"name" : "originalSpectrum", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "double"
+			}
+		},
+	    {"name" : "spectrum", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "double"
+			}
+		},
+	    {"name" : "compoundPredictions", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "double"
+			}
+		},
+	    {"name" : "compoundVetos", "type":
+			{
+				"type"  : "array",
+			    "name"  : "value",
+				"items" : "boolean"
+			}
+		}
+	  ]
+}
