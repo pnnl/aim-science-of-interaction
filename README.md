@@ -4,7 +4,7 @@ an interactive text visualization tool for studying user interaction
 
 ## Analysis in Motion (AIM)
 
-AIM is focused on the exploratory process of defining new knowledge in a streaming environment; we seek to construct machines that can help tell stories from data by constructing and evolving candidate hypotheses in parallel with the stream. Research and development is being conducted in four main thrust areas including human-machine feedback, hypothesis generation and testing, streaming data characterization, and work environments. [Learn more at aim.pnnl.gov](http://aim.pnnl.gov/).
+Analysis in Motion (AIM) is a Laboratory Directed Research and Development initiative at [Pacific Northwest National Laboratory](http://www.pnnl.gov/). AIM is focused on the exploratory process of defining new knowledge in a streaming environment; we seek to construct machines that can help tell stories from data by constructing and evolving candidate hypotheses in parallel with the stream. Research and development is being conducted in four main thrust areas including human-machine feedback, hypothesis generation and testing, streaming data characterization, and work environments. [Learn more at aim.pnnl.gov](http://aim.pnnl.gov/).
 
 ## Creators
 
